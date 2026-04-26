@@ -63,7 +63,8 @@ class AuthAPI {
       throw new Error('Сессия истекла')
     }
 
-    localStorage.setItem('accessToken', data.accessToken)
+      localStorage.setItem('accessToken', data.accessToken)
+      localStorage.setItem('refreshToken', data.refreshToken)
     return data.accessToken
   }
 

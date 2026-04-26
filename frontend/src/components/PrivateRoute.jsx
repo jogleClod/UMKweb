@@ -42,7 +42,6 @@ function PrivateRoute({ children }) {
     return <Navigate to="/auth" replace />
   }
 
-  console.log('Ебллан прошел аутентификацию, ГС должна работать')
   return children
 }
 
