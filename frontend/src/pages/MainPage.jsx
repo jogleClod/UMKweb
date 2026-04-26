@@ -108,13 +108,56 @@ function App() {
         5: "LITERATURE"
     }
 
+    const subcategoryMap = {
+        SYLLABUS: [
+            "Модуль",
+            "Пояснительная записка"
+        ],
+
+        LECTURE: [
+            "Лекции",
+            "Презентации",
+            "Видео лекции"
+        ],
+
+        LAB: [
+            "Учебные материалы",
+            "Методические материалы",
+            "Видео материалы"
+        ],
+
+        SRS: [
+            "Методические указания",
+            "Задания",
+            "Семинары / Форум / Обратная связь"
+        ],
+
+        TEST: [
+            "Контрольные вопросы",
+            "Контрольные задания"
+        ],
+
+        LITERATURE: [
+            "Рекомендуемые источники"
+        ]
+    }
+
+    const [activeSubcategory, setActiveSubcategory] = useState(null)
+
+    useEffect(() => {
+        setActiveSubcategory(null)
+    }, [active])
+
     const filteredMaterials = materials.filter(
-        item => item.category === categoryMap[active]
+        item =>
+            item.category === categoryMap[active] &&
+            item.subcategory === activeSubcategory
     )
 
 
 
-  return (
+
+    return (
     <div className="container">
       <div className="user-bar">
         <div className="user-info">
@@ -187,22 +230,53 @@ function App() {
           <h3 className="content-title">{tabs[active].title}</h3>
         </div>
         <div className="content-body">
-          <ul className="content-list">
-              {filteredMaterials.map((item) => (
-                  <li key={item.id} className="content-item">
-                      <span className="item-marker">▸</span>
+            <div className="subcategory-list">
+                {subcategoryMap[categoryMap[active]]?.map((sub) => (
+                    <button
+                        key={sub}
+                        className={`subcategory-btn ${
+                            activeSubcategory === sub
+                                ? "active-sub-btn"
+                                : ""
+                        }`}
+                        onClick={() =>
+                            setActiveSubcategory(sub)
+                        }
+                    >
+                        {sub}
+                    </button>
+                ))}
+            </div>
 
-                      <a
-                          href={item.url}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="item-text"
-                      >
-                          {item.title}
-                      </a>
-                  </li>
-              ))}
-          </ul>
+            {activeSubcategory && (
+                <div className="materials-block">
+                    {filteredMaterials.length > 0 ? (
+                        <ul className="content-list">
+                            {filteredMaterials.map((item) => (
+                                <li
+                                    key={item.id}
+                                    className="content-item"
+                                >
+                        <span className="item-marker">
+                            📄
+                        </span>
+
+                                    <a
+                                        href={`https://umk-qu6t.onrender.com/materials/download/${item.id}`}
+                                        className="item-text"
+                                    >
+                                        {item.title}
+                                    </a>
+                                </li>
+                            ))}
+                        </ul>
+                    ) : (
+                        <p className="empty-materials">
+                            Материалы пока не добавлены
+                        </p>
+                    )}
+                </div>
+            )}
         </div>
       </div>
     </div>
