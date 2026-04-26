@@ -2,6 +2,7 @@ import { Routes, Route, Navigate } from 'react-router-dom'
 import { useAuth } from './hooks/useAuth'
 import HomePage from './pages/MainPage.jsx'
 import AuthPage from './pages/AuthPage.jsx'
+import AdminPage from './pages/AdminPage.jsx'
 
 function App() {
   const { isAuthenticated, loading } = useAuth()
@@ -17,6 +18,10 @@ function App() {
       <Route
         path="/"
         element={isAuthenticated ? <HomePage /> : <Navigate to="/auth" replace />}
+      />
+      <Route
+      path="/admin"
+      element={isAuthenticated ? <AdminPage/> :<Navigate to="/auth" replace/>}
       />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

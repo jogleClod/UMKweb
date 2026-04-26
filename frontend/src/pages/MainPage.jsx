@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useAuth } from '../hooks/useAuth'
 import '../pages/MainPage.css'
+import { useNavigate } from 'react-router-dom'
 
 const tabs = [
   {
@@ -50,6 +51,27 @@ const tabs = [
 function App() {
   const [active, setActive] = useState(0)
   const { user, logout } = useAuth()
+  const navigate = useNavigate()
+  const [clickCount, setClickCount] = useState(0)
+  const [lastClickTime, setLastClickTime] = useState(0)
+  const handleBadgeClick = () => {
+  const currentTime = Date.now()
+    
+    if (currentTime - lastClickTime > 2000) {
+      setClickCount(1)
+    } else {
+      setClickCount(prev => prev + 1)
+    }
+    
+    setLastClickTime(currentTime)
+    
+    // При тройном клике переходим в админку
+    if (clickCount === 2) { 
+      console.log("Нажата") // 2 потому что это будет третий клик
+      navigate('/admin')
+      setClickCount(0) 
+    }
+  }
 
   return (
     <div className="container">
@@ -64,7 +86,20 @@ function App() {
       </div>
 
       <header className="header">
-        <div className="header-badge">УМК</div>
+         <div 
+          className="header-badge"
+          onClick={handleBadgeClick}
+          title="Нажмите 3 раза для входа в админку"
+          style={{ cursor: 'pointer' }}
+        >
+          ЭУМК
+          {/* Подсказка появляется при наведении */}
+          {clickCount > 0 && (
+            <span className="click-hint">
+              {3 - clickCount} нажатий осталось
+            </span>
+          )}
+        </div>
         <h1 className="title">
           ЭЛЕКТРОННЫЙ УЧЕБНО-МЕТОДИЧЕСКИЙ КОМПЛЕКС
         </h1>
