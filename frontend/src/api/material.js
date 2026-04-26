@@ -68,6 +68,35 @@ class MaterialAPI {
 
         return response.json()
     }
+
+    static async updateMaterial(
+        id,
+        formData
+    ) {
+        const token =
+            localStorage.getItem(
+                "accessToken"
+            )
+
+        const response = await fetch(
+            `${API_URL}/materials/${id}`,
+            {
+                method: "PUT",
+                headers: {
+                    Authorization: `Bearer ${token}`
+                },
+                body: formData
+            }
+        )
+
+        if (!response.ok) {
+            throw new Error(
+                "Ошибка обновления"
+            )
+        }
+
+        return response.json()
+    }
 }
 
 export default MaterialAPI

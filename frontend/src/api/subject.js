@@ -32,6 +32,31 @@ class SubjectAPI {
 
         return response.json()
     }
+
+    static async deleteSubject(id) {
+        const token =
+            localStorage.getItem(
+                "accessToken"
+            )
+
+        const response = await fetch(
+            `${API_URL}/subjects/${id}`,
+            {
+                method: "DELETE",
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }
+        )
+
+        if (!response.ok) {
+            throw new Error(
+                "Ошибка удаления предмета"
+            )
+        }
+
+        return response.json()
+    }
 }
 
 export default SubjectAPI
