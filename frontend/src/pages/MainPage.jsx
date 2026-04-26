@@ -1,7 +1,10 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useAuth } from '../hooks/useAuth'
+import SubjectAPI from '../api/subject.js'
 import '../pages/MainPage.css'
 import { useNavigate } from 'react-router-dom'
+import MaterialAPI from "../api/material"
+
 
 const tabs = [
   {
@@ -73,6 +76,44 @@ function App() {
     }
   }
 
+
+    const [subjects, setSubjects] = useState([])
+    const [selectedSubject, setSelectedSubject] = useState(null)
+
+    const [materials, setMaterials] = useState([])
+
+    useEffect(() => {
+        SubjectAPI.getSubjects()
+            .then(data => {
+                setSubjects(data)
+                setSelectedSubject(data[0])
+            })
+    }, [])
+
+    useEffect(() => {
+        if (!selectedSubject) return
+
+        MaterialAPI.getBySubject(selectedSubject.id)
+            .then(data => {
+                setMaterials(data)
+            })
+    }, [selectedSubject])
+
+    const categoryMap = {
+        0: "SYLLABUS",
+        1: "LECTURE",
+        2: "LAB",
+        3: "SRS",
+        4: "TEST",
+        5: "LITERATURE"
+    }
+
+    const filteredMaterials = materials.filter(
+        item => item.category === categoryMap[active]
+    )
+
+
+
   return (
     <div className="container">
       <div className="user-bar">
@@ -103,10 +144,26 @@ function App() {
         <h1 className="title">
           ЭЛЕКТРОННЫЙ УЧЕБНО-МЕТОДИЧЕСКИЙ КОМПЛЕКС
         </h1>
-        <h2 className="subtitle">
-          ТЕХНОЛОГИЯ СУШКИ
-        </h2>
+          <div className="subject-select-wrapper">
+              <p className="subject-label">Выберите предмет</p>
+
+              <div className="subjects-list">
+                  {subjects.map((subject) => (
+                      <button
+                          key={subject.id}
+                          className={`subject-card ${
+                              selectedSubject?.id === subject.id ? "active-subject" : ""
+                          }`}
+                          onClick={() => setSelectedSubject(subject)}
+                      >
+                          {subject.title}
+                      </button>
+                  ))}
+              </div>
+          </div>
       </header>
+
+
 
       <div className="tabs-wrapper">
         <div className="tabs">
@@ -131,12 +188,20 @@ function App() {
         </div>
         <div className="content-body">
           <ul className="content-list">
-            {tabs[active].content.map((item, i) => (
-              <li key={i} className="content-item">
-                <span className="item-marker">▸</span>
-                <span className="item-text">{item}</span>
-              </li>
-            ))}
+              {filteredMaterials.map((item) => (
+                  <li key={item.id} className="content-item">
+                      <span className="item-marker">▸</span>
+
+                      <a
+                          href={item.url}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="item-text"
+                      >
+                          {item.title}
+                      </a>
+                  </li>
+              ))}
           </ul>
         </div>
       </div>
