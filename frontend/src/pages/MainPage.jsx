@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useAuth } from '../hooks/useAuth'
 import SubjectAPI from '../api/subject.js'
 import '../pages/MainPage.css'
@@ -55,26 +55,38 @@ function App() {
   const [active, setActive] = useState(0)
   const { user, logout } = useAuth()
   const navigate = useNavigate()
+
   const [clickCount, setClickCount] = useState(0)
   const [lastClickTime, setLastClickTime] = useState(0)
-  const handleBadgeClick = () => {
-  const currentTime = Date.now()
+   // Используем useRef для точного подсчета кликов
+  const clickCountRef = useRef(0)
+  const clickTimerRef = useRef(null)
+  const [showHint, setShowHint] = useState(false)
+
+   const handleBadgeClick = () => {
+    clickCountRef.current += 1
+    setShowHint(true)
     
-    if (currentTime - lastClickTime > 2000) {
-      setClickCount(1)
-    } else {
-      setClickCount(prev => prev + 1)
+    if (clickTimerRef.current) {
+      clearTimeout(clickTimerRef.current)
     }
     
-    setLastClickTime(currentTime)
-    
-    // При тройном клике переходим в админку
-    if (clickCount === 2) { 
-      console.log("Нажата") // 2 потому что это будет третий клик
+    if (clickCountRef.current >= 3) {
       navigate('/admin')
-      setClickCount(0) 
+      clickCountRef.current = 0
+      setShowHint(false)
+      if (clickTimerRef.current) {
+        clearTimeout(clickTimerRef.current)
+      }
+      return
     }
+    
+    clickTimerRef.current = setTimeout(() => {
+      clickCountRef.current = 0
+      setShowHint(false)
+    }, 2000)
   }
+
 
 
     const [subjects, setSubjects] = useState([])
@@ -158,32 +170,35 @@ function App() {
 
 
     return (
+    
     <div className="container">
-      <div className="user-bar">
-        <div className="user-info">
-          <span className="user-avatar">👤</span>
-          <span className="user-name">{user?.name || 'Пользователь'}</span>
-        </div>
-        <button onClick={logout} className="logout-button">
-          Выйти
-        </button>
-      </div>
-
-      <header className="header">
-         <div 
-          className="header-badge"
+      <div className="top-bar">
+        <div 
+          className="logo-badge"
           onClick={handleBadgeClick}
           title="Нажмите 3 раза для входа в админку"
-          style={{ cursor: 'pointer' }}
         >
-          ЭУМК
-          {/* Подсказка появляется при наведении */}
-          {clickCount > 0 && (
+          <span className="logo-icon">📚</span>
+          <span className="logo-text">УМК</span>
+          {showHint && (
             <span className="click-hint">
-              {3 - clickCount} нажатий осталось
+              Ещё {3 - clickCountRef.current} нажатия
             </span>
           )}
         </div>
+        
+       <div 
+  className="user-icon" 
+  onClick={() => navigate('/profile')}
+  style={{ cursor: 'pointer' }}
+  title="Перейти в профиль"
+>
+  <span>👤</span>
+</div>
+      </div>
+
+      <header className="header">
+         
         <h1 className="title">
           ЭЛЕКТРОННЫЙ УЧЕБНО-МЕТОДИЧЕСКИЙ КОМПЛЕКС
         </h1>

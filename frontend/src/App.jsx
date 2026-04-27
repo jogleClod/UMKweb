@@ -3,6 +3,8 @@ import { useAuth } from './hooks/useAuth'
 import HomePage from './pages/MainPage.jsx'
 import AuthPage from './pages/AuthPage.jsx'
 import AdminPage from './pages/AdminPage.jsx'
+import ProfilePage from './pages/ProfilePage.jsx'
+
 
 function App() {
   const { isAuthenticated, loading } = useAuth()
@@ -23,7 +25,13 @@ function App() {
       path="/admin"
       element={isAuthenticated ? <AdminPage/> :<Navigate to="/auth" replace/>}
       />
+       <Route
+      path="/profile"
+      element={isAuthenticated ? <ProfilePage/> :<Navigate to="/auth" replace/>}
+      />
       <Route path="*" element={<Navigate to="/" replace />} />
+      
+  
     </Routes>
   )
 }
