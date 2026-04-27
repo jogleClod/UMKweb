@@ -1,105 +1,158 @@
-import { useState, useEffect, useRef } from 'react'
-import { useAuth } from '../hooks/useAuth'
-import SubjectAPI from '../api/subject.js'
-import '../pages/MainPage.css'
-import { useNavigate } from 'react-router-dom'
+import { useState, useEffect, useRef } from "react"
+import { useAuth } from "../hooks/useAuth"
+import SubjectAPI from "../api/subject.js"
 import MaterialAPI from "../api/material"
-
+import { useNavigate } from "react-router-dom"
+import "../pages/MainPage.css"
+import TestAPI from "../api/test"
+import { translations } from "../constants/translations"
 
 const tabs = [
-  {
-    title: 'УМК',
-    icon: '📚',
-    content: ['Модуль', 'Пояснительная записка']
-  },
-  {
-    title: 'Лекционные материалы',
-    icon: '📖',
-    content: ['Лекции']
-  },
-  {
-    title: 'Практические и лабораторные работы',
-    icon: '🔬',
-    content: [
-      'Учебные и методические материалы',
-      'Презентации',
-      'Видео лекции',
-      'Видео материалы'
-    ]
-  },
-  {
-    title: 'СРС',
-    icon: '✍️',
-    content: [
-      'Методические указания',
-      'Задания',
-      'Семинары / Форум / Обратная связь'
-    ]
-  },
-  {
-    title: 'Контрольные задания',
-    icon: '✅',
-    content: [
-      'Контрольные вопросы',
-      'Контрольные задания'
-    ]
-  },
-  {
-    title: 'Литература',
-    icon: '📕',
-    content: ['Рекомендуемые источники']
-  }
+    {
+        key: "syllabus",
+        category: "SYLLABUS"
+    },
+    {
+        key: "lectures",
+        category: "LECTURE"
+    },
+    {
+        key: "labs",
+        category: "LAB"
+    },
+    {
+        key: "srs",
+        category: "SRS"
+    },
+    {
+        key: "tests",
+        category: "TEST"
+    },
+    {
+        key: "literature",
+        category: "LITERATURE"
+    }
 ]
 
+const subcategoryMap = {
+    SYLLABUS: [
+        {
+            key: "module",
+            ru: "Модуль",
+            kg: "Модуль"
+        },
+        {
+            key: "explanatory_note",
+            ru: "Пояснительная записка",
+            kg: "Түшүндүрмө кат"
+        }
+    ],
+
+    LECTURE: [
+        {
+            key: "lectures",
+            ru: "Лекции",
+            kg: "Лекциялар"
+        },
+        {
+            key: "presentations",
+            ru: "Презентации",
+            kg: "Презентациялар"
+        },
+        {
+            key: "video_lectures",
+            ru: "Видео лекции",
+            kg: "Видео лекциялар"
+        }
+    ],
+
+    LAB: [
+        {
+            key: "study_materials",
+            ru: "Учебные материалы",
+            kg: "Окуу материалдары"
+        },
+        {
+            key: "method_materials",
+            ru: "Методические материалы",
+            kg: "Методикалык материалдар"
+        },
+        {
+            key: "video_materials",
+            ru: "Видео материалы",
+            kg: "Видео материалдар"
+        }
+    ],
+
+    SRS: [
+        {
+            key: "guidelines",
+            ru: "Методические указания",
+            kg: "Методикалык көрсөтмөлөр"
+        },
+        {
+            key: "tasks",
+            ru: "Задания",
+            kg: "Тапшырмалар"
+        }
+    ],
+
+    TEST: [
+        {
+            key: "control_questions",
+            ru: "Контрольные вопросы",
+            kg: "Көзөмөл суроолору"
+        },
+        {
+            key: "control_tasks",
+            ru: "Контрольные задания",
+            kg: "Көзөмөл тапшырмалары"
+        },
+        {
+            key: "tests",
+            ru: "Тесты",
+            kg: "Тесттер"
+        },
+        {
+            key: "situational_tasks",
+            ru: "Ситуационные задачи",
+            kg: "Ситуациялык тапшырмалар"
+        }
+    ],
+
+    LITERATURE: [
+        {
+            key: "recommended_sources",
+            ru: "Рекомендуемые источники",
+            kg: "Сунушталган булактар"
+        }
+    ]
+}
+
+
 function App() {
-  const [active, setActive] = useState(0)
-  const { user, logout } = useAuth()
-  const navigate = useNavigate()
-
-  const [clickCount, setClickCount] = useState(0)
-  const [lastClickTime, setLastClickTime] = useState(0)
-   // Используем useRef для точного подсчета кликов
-  const clickCountRef = useRef(0)
-  const clickTimerRef = useRef(null)
-  const [showHint, setShowHint] = useState(false)
-
-   const handleBadgeClick = () => {
-    clickCountRef.current += 1
-    setShowHint(true)
-    
-    if (clickTimerRef.current) {
-      clearTimeout(clickTimerRef.current)
-    }
-    
-    if (clickCountRef.current >= 3) {
-      navigate('/admin')
-      clickCountRef.current = 0
-      setShowHint(false)
-      if (clickTimerRef.current) {
-        clearTimeout(clickTimerRef.current)
-      }
-      return
-    }
-    
-    clickTimerRef.current = setTimeout(() => {
-      clickCountRef.current = 0
-      setShowHint(false)
-    }, 2000)
-  }
-
-
+    const { user } = useAuth()
+    const navigate = useNavigate()
 
     const [subjects, setSubjects] = useState([])
     const [selectedSubject, setSelectedSubject] = useState(null)
-
     const [materials, setMaterials] = useState([])
 
+    const [activeCategory, setActiveCategory] = useState(null)
+    const [activeSubcategory, setActiveSubcategory] = useState(null)
+
+    const clickCountRef = useRef(0)
+    const clickTimerRef = useRef(null)
+    const [showHint, setShowHint] = useState(false)
+
+
     useEffect(() => {
-        SubjectAPI.getSubjects()
-            .then(data => {
-                setSubjects(data)
+        SubjectAPI.getSubjects().then(data => {
+            setSubjects(data)
+            if (data.length > 0) {
                 setSelectedSubject(data[0])
-            })
+            }
+        })
     }, [])
 
     useEffect(() => {
@@ -111,191 +164,549 @@ function App() {
             })
     }, [selectedSubject])
 
-    const categoryMap = {
-        0: "SYLLABUS",
-        1: "LECTURE",
-        2: "LAB",
-        3: "SRS",
-        4: "TEST",
-        5: "LITERATURE"
+    const handleBadgeClick = () => {
+        clickCountRef.current += 1
+        setShowHint(true)
+
+        if (clickTimerRef.current) {
+            clearTimeout(clickTimerRef.current)
+        }
+
+        if (clickCountRef.current >= 3) {
+            navigate("/admin")
+            clickCountRef.current = 0
+            setShowHint(false)
+            return
+        }
+
+        clickTimerRef.current = setTimeout(() => {
+            clickCountRef.current = 0
+            setShowHint(false)
+        }, 2000)
     }
-
-    const subcategoryMap = {
-        SYLLABUS: [
-            "Модуль",
-            "Пояснительная записка"
-        ],
-
-        LECTURE: [
-            "Лекции",
-            "Презентации",
-            "Видео лекции"
-        ],
-
-        LAB: [
-            "Учебные материалы",
-            "Методические материалы",
-            "Видео материалы"
-        ],
-
-        SRS: [
-            "Методические указания",
-            "Задания",
-            "Семинары / Форум / Обратная связь"
-        ],
-
-        TEST: [
-            "Контрольные вопросы",
-            "Контрольные задания"
-        ],
-
-        LITERATURE: [
-            "Рекомендуемые источники"
-        ]
-    }
-
-    const [activeSubcategory, setActiveSubcategory] = useState(null)
-
-    useEffect(() => {
-        setActiveSubcategory(null)
-    }, [active])
 
     const filteredMaterials = materials.filter(
         item =>
-            item.category === categoryMap[active] &&
+            item.category === activeCategory &&
             item.subcategory === activeSubcategory
     )
 
+    const [openedMenu, setOpenedMenu] = useState(null)
+
+    const [tests, setTests] = useState([])
+    const [userAnswers, setUserAnswers] = useState([])
+    const [testResult, setTestResult] = useState(null)
+    const [testHistory, setTestHistory] = useState([])
+    const [selectedTest, setSelectedTest] =
+        useState(null)
+
+    const [startTest, setStartTest] =
+        useState(false)
 
 
+
+    const loadTests = async () => {
+        try {
+            const data =
+                await TestAPI.getTestsBySubject(
+                    selectedSubject.id
+                )
+
+            console.log("TESTS:", data)
+
+            setTests(data)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const groupedTests = Object.values(
+        tests.reduce((acc, question) => {
+            const key =
+                question.testTitle ||
+                "Без названия"
+
+            if (!acc[key]) {
+                acc[key] = {
+                    title: key,
+                    questions: []
+                }
+            }
+
+            acc[key].questions.push(question)
+
+            return acc
+        }, {})
+    )
+
+    const loadTestHistory = async () => {
+        try {
+            const data =
+                await TestAPI.getMyResults()
+
+            setTestHistory(data)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const handleSubmitTest = async () => {
+        try {
+            if (
+                userAnswers.length !==
+                tests.length
+            ) {
+                alert(
+                    "Ответьте на все вопросы"
+                )
+                return
+            }
+
+            const result =
+                await TestAPI.submitTest({
+                    subjectId:
+                    selectedSubject.id,
+                    answers: userAnswers
+                })
+
+            setTestResult(result)
+            setStartTest(false)
+
+            // очищаем ответы
+            setUserAnswers([])
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    useEffect(() => {
+        if (activeSubcategory === "Тесты") {
+            console.log("Открыли тесты")
+            console.log("selectedSubject:", selectedSubject)
+
+            loadTests()
+            loadTestHistory()
+        }
+    }, [activeSubcategory, selectedSubject])
+
+
+    const [language, setLanguage] =
+        useState("ru")
+
+
+    const t =
+        translations[language]
 
     return (
-    
-    <div className="container">
-      <div className="top-bar">
-        <div 
-          className="logo-badge"
-          onClick={handleBadgeClick}
-          title="Нажмите 3 раза для входа в админку"
-        >
-          <span className="logo-icon">📚</span>
-          <span className="logo-text">УМК</span>
-          {showHint && (
-            <span className="click-hint">
-              Ещё {3 - clickCountRef.current} нажатия
-            </span>
-          )}
-        </div>
-        
-       <div 
-  className="user-icon" 
-  onClick={() => navigate('/profile')}
-  style={{ cursor: 'pointer' }}
-  title="Перейти в профиль"
->
-  <span>👤</span>
-</div>
-      </div>
+        <div className="main-container">
 
-      <header className="header">
-         
-        <h1 className="title">
-          ЭЛЕКТРОННЫЙ УЧЕБНО-МЕТОДИЧЕСКИЙ КОМПЛЕКС
-        </h1>
-          <div className="subject-select-wrapper">
-              <p className="subject-label">Выберите предмет</p>
+            {/* TOP BAR */}
+            <div className="top-bar">
+                <div className="left-header">
+                    <div
+                        className="logo-circle"
+                        onClick={handleBadgeClick}
+                    >
+                        <div className="logo-inner-text">
+                            УМК
+                        </div>
 
-              <div className="subjects-list">
-                  {subjects.map((subject) => (
-                      <button
-                          key={subject.id}
-                          className={`subject-card ${
-                              selectedSubject?.id === subject.id ? "active-subject" : ""
-                          }`}
-                          onClick={() => setSelectedSubject(subject)}
-                      >
-                          {subject.title}
-                      </button>
-                  ))}
-              </div>
-          </div>
-      </header>
+                        {showHint && (
+                            <div className="hint-box">
+                                Ещё {3 - clickCountRef.current} нажатия
+                            </div>
+                        )}
+                    </div>
 
+                    <div className="header-text-block">
+                        <h1>{t.title}</h1>
 
+                    </div>
+                </div>
 
-      <div className="tabs-wrapper">
-        <div className="tabs">
-          {tabs.map((tab, index) => (
-            <button
-              key={index}
-              className={`tab ${active === index ? 'active' : ''}`}
-              onClick={() => setActive(index)}
-            >
-              <span className="tab-icon">{tab.icon}</span>
-              <span className="tab-title">{tab.title}</span>
-              {active === index && <div className="active-indicator" />}
-            </button>
-          ))}
-        </div>
-      </div>
+                <div
+                    className="profile-btn"
+                    onClick={() => navigate("/profile")}
+                >
+                    <img className="icon"
+                        src={"https://www.svgrepo.com/show/343494/profile-user-account.svg"} alt={"profile-user-account"} />
+                </div>
 
-      <div className="content">
-        <div className="content-header">
-          <span className="content-icon">{tabs[active].icon}</span>
-          <h3 className="content-title">{tabs[active].title}</h3>
-        </div>
-        <div className="content-body">
-            <div className="subcategory-list">
-                {subcategoryMap[categoryMap[active]]?.map((sub) => (
+                <div className="language-switcher">
                     <button
-                        key={sub}
-                        className={`subcategory-btn ${
-                            activeSubcategory === sub
-                                ? "active-sub-btn"
+                        className={
+                            language === "ru"
+                                ? "active-lang"
                                 : ""
-                        }`}
+                        }
                         onClick={() =>
-                            setActiveSubcategory(sub)
+                            setLanguage("ru")
                         }
                     >
-                        {sub}
+                        RU
                     </button>
+
+                    <button
+                        className={
+                            language === "kg"
+                                ? "active-lang"
+                                : ""
+                        }
+                        onClick={() =>
+                            setLanguage("kg")
+                        }
+                    >
+                        KG
+                    </button>
+                </div>
+            </div>
+
+
+
+            {/* MAIN NAV LIKE PHOTO */}
+            <div className="horizontal-menu">
+
+                <div className="menu-column home-column">
+                    <h3>{t.main}</h3>
+                </div>
+
+                {tabs.map(tab => (
+                    <div
+                        key={tab.key}
+                        className={`menu-column ${
+                            activeCategory === tab.category
+                                ? "active-column"
+                                : ""
+                        }`}
+                    >
+                        <h3
+                            onClick={() => {
+                                // открытие/закрытие подменю
+                                if (openedMenu === tab.category) {
+                                    setOpenedMenu(null)
+                                } else {
+                                    setOpenedMenu(tab.category)
+                                }
+
+                                setActiveCategory(tab.category)
+
+                                if (
+                                    tab.category &&
+                                    subcategoryMap[tab.category]?.length > 0
+                                ) {
+                                    setActiveSubcategory(
+                                        subcategoryMap[tab.category][0].ru
+                                    )
+                                }
+                            }}
+                        >
+                            {t[tab.key]}
+                        </h3>
+
+                        <div
+                            className={`submenu ${
+                                openedMenu === tab.category
+                                    ? "submenu-open"
+                                    : ""
+                            }`}
+                        >
+                            {openedMenu === tab.category &&
+                                subcategoryMap[tab.category]?.map(sub => (
+                                    <p
+                                        key={sub.key}
+                                        className={
+                                            activeSubcategory === sub.ru
+                                                ? "active-subcategory"
+                                                : ""
+                                        }
+                                        onClick={() => {
+                                            setActiveCategory(
+                                                tab.category
+                                            )
+
+                                            // в state сохраняем русское значение для БД
+                                            setActiveSubcategory(
+                                                sub.ru
+                                            )
+                                        }}
+                                    >
+                                        • {language === "kg"
+                                        ? sub.kg
+                                        : sub.ru}
+                                    </p>
+                                ))}
+                        </div>
+                    </div>
                 ))}
             </div>
 
-            {activeSubcategory && (
-                <div className="materials-block">
-                    {filteredMaterials.length > 0 ? (
-                        <ul className="content-list">
-                            {filteredMaterials.map((item) => (
-                                <li
-                                    key={item.id}
-                                    className="content-item"
-                                >
-                        <span className="item-marker">
-                            📄
-                        </span>
+            {/* MATERIALS */}
+            <div className="materials-section">
 
-                                    <a
-                                        href={`https://umk-qu6t.onrender.com/materials/download/${item.id}`}
-                                        className="item-text"
-                                    >
-                                        {item.title}
-                                    </a>
-                                </li>
-                            ))}
-                        </ul>
-                    ) : (
-                        <p className="empty-materials">
-                            Материалы пока не добавлены
-                        </p>
-                    )}
-                </div>
-            )}
+                {!activeSubcategory ? (
+                    <p className="empty-text">
+                        {t.chooseSection}
+                    </p>
+
+                ) : activeSubcategory === "Тесты" ? (
+
+                    <div className="test-container">
+
+                        {!selectedTest ? (
+                            <>
+                                <h2>{t.availableTests}</h2>
+
+                                <div className="tests-list">
+                                    {groupedTests.map(
+                                        (test, index) => (
+                                            <div
+                                                key={index}
+                                                className="test-list-card"
+                                            >
+                                                <h3>
+                                                    {test.title}
+                                                </h3>
+
+                                                <p>
+                                                    {t.questions}:
+                                                    {
+                                                        test.questions
+                                                            .length
+                                                    }
+                                                </p>
+
+                                                <button
+                                                    onClick={() =>
+                                                        setSelectedTest(
+                                                            test
+                                                        )
+                                                    }
+                                                >
+                                                    {t.open}
+                                                </button>
+                                            </div>
+                                        )
+                                    )}
+                                </div>
+                            </>
+                        ) : !startTest ? (
+                            <div className="test-preview-card">
+                                <h2>
+                                    {selectedTest.title}
+                                </h2>
+
+                                <p>
+                                    {t.questionCount}:
+                                    {
+                                        selectedTest.questions
+                                            .length
+                                    }
+                                </p>
+
+                                <button
+                                    className="start-test-btn"
+                                    onClick={() =>
+                                        setStartTest(true)
+                                    }
+                                >
+                                    {t.startTest}
+                                </button>
+
+                                <button
+                                    className="back-btn"
+                                    onClick={() =>
+                                        setSelectedTest(
+                                            null
+                                        )
+                                    }
+                                >
+                                    {t.back}
+                                </button>
+                            </div>
+                        ) : (
+                            <>
+                                <h2>{t.passingTest}</h2>
+
+                                {selectedTest.questions.map(
+                                    (question) => (
+                                        <div
+                                            key={question.id}
+                                            className="test-question"
+                                        >
+                                            <h3>
+                                                {question.text}
+                                            </h3>
+
+                                            <div className="answers-list">
+                                                {question.answers.map(
+                                                    (
+                                                        answer
+                                                    ) => (
+                                                        <label
+                                                            key={
+                                                                answer.id
+                                                            }
+                                                            className="answer-option"
+                                                        >
+                                                            <input
+                                                                type="radio"
+                                                                name={`question-${question.id}`}
+                                                                onChange={() => {
+                                                                    const updated =
+                                                                        userAnswers.filter(
+                                                                            item =>
+                                                                                item.questionId !==
+                                                                                question.id
+                                                                        )
+
+                                                                    updated.push(
+                                                                        {
+                                                                            questionId:
+                                                                            question.id,
+                                                                            answerId:
+                                                                            answer.id
+                                                                        }
+                                                                    )
+
+                                                                    setUserAnswers(
+                                                                        updated
+                                                                    )
+                                                                }}
+                                                            />
+
+                                                            {
+                                                                answer.text
+                                                            }
+                                                        </label>
+                                                    )
+                                                )}
+                                            </div>
+                                        </div>
+                                    )
+                                )}
+
+                                <button
+                                    className="submit-test-btn"
+                                    onClick={
+                                        handleSubmitTest
+                                    }
+                                >
+                                    {t.finishTest}
+                                </button>
+                            </>
+                        )}
+
+                        {testResult && (
+                            <div className="result-box">
+                                <h3>
+                                    {t.result}
+                                </h3>
+
+                                <p>
+                                    {t.score}:
+                                    {
+                                        testResult.result
+                                            .score
+                                    } /
+                                    {
+                                        testResult.result
+                                            .total
+                                    }
+                                </p>
+
+                                <p>
+                                    {t.percent}:
+                                    {
+                                        testResult.result
+                                            .percent
+                                    }%
+                                </p>
+                            </div>
+                        )}
+                    </div>
+
+                ) : filteredMaterials.length > 0 ? (
+
+                    <div className="materials-grid">
+                        {filteredMaterials.map((material) => (
+                            <div
+                                key={material.id}
+                                className="material-card"
+                            >
+                                <div className="material-info">
+                                    <h3 className="material-title">
+                                        {material.title}
+                                    </h3>
+
+                                    <p className="material-description">
+                                        {material.description ||
+                                            t.noDescription}
+                                    </p>
+
+                                    <div className="material-meta">
+                            <span>
+                                📁 {material.type}
+                            </span>
+
+                                        <span>
+                                👤 {
+                                            material.author?.name
+                                        }
+                            </span>
+
+                                        <span>
+                                📅{" "}
+                                            {new Date(
+                                                material.createdAt
+                                            ).toLocaleDateString()}
+                            </span>
+                                    </div>
+                                </div>
+
+                                <div className="material-actions">
+                                    {["VIDEO", "LINK"].includes(
+                                        material.type
+                                    ) ? (
+                                        <a
+                                            href={material.url}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="view-btn"
+                                        >
+                                            {t.watch}
+                                        </a>
+                                    ) : (
+                                        <>
+                                            <a
+                                                href={material.url}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="view-btn"
+                                            >
+                                                {t.open}
+                                            </a>
+
+                                            <a
+                                                href={`https://umk-qu6t.onrender.com/materials/download/${material.id}`}
+                                                className="download-btn"
+                                            >
+                                                {t.download}
+                                            </a>
+                                        </>
+                                    )}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+
+                ) : (
+                    <p className="empty-text">
+                        {t.noMaterials}
+                    </p>
+                )}
+            </div>
         </div>
-      </div>
-    </div>
-  )
+    )
 }
 
 export default App

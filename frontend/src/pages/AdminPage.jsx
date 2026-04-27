@@ -2,9 +2,9 @@
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { useAuth } from "../hooks/useAuth"
-import SubjectAPI from "../api/subject"
 import MaterialAPI from "../api/material"
 import "./AdminPage.css"
+import TestAPI from "../api/test"
 
 // ==========================================
 // НОВЫЙ API для аналитики пользователей
@@ -95,7 +95,8 @@ const sections = [
     icon: "✅",
     subcategories: [
       "Контрольные вопросы",
-      "Контрольные задания"
+      "Контрольные задания",
+        "Тесты"
     ]
   },
   {
@@ -112,9 +113,6 @@ function AdminPage() {
   const { user, logout } = useAuth()
   const navigate = useNavigate()
 
-  
-  const [subjects, setSubjects] = useState([])
-  const [selectedSubject, setSelectedSubject] = useState(null)
   const [materials, setMaterials] = useState([])
 
   const [activeSection, setActiveSection] = useState(null)
@@ -130,31 +128,63 @@ function AdminPage() {
   const [materialsProgress, setMaterialsProgress] = useState([])
   const [selectedUserHistory, setSelectedUserHistory] = useState(null)
   const [loadingAnalytics, setLoadingAnalytics] = useState(false)
+    const [testQuestions, setTestQuestions] = useState([
+        {
+            question: "",
+            options: ["", "", "", ""],
+            correctAnswer: ""
+        }
+    ])
 
-  useEffect(() => {
-    loadSubjects()
-  }, [])
+    useEffect(() => {
+        loadMaterials()
+    }, [])
 
-  useEffect(() => {
-    if (!selectedSubject) return
-    loadMaterials()
-  }, [selectedSubject])
+    //добавление теста
 
-  const loadSubjects = async () => {
-    try {
-      const data = await SubjectAPI.getSubjects()
-      setSubjects(data)
-      if (data.length > 0) {
-        setSelectedSubject(data[0])
-      }
-    } catch (err) {
-      console.log(err)
+    const addQuestion = () => {
+        setTestQuestions([
+            ...testQuestions,
+            {
+                question: "",
+                options: ["", "", "", ""],
+                correctAnswer: ""
+            }
+        ])
     }
-  }
+    const updateQuestionText = (index, value) => {
+        const updated = [...testQuestions]
+        updated[index].question = value
+        setTestQuestions(updated)
+    }
+    const updateOption = (
+        questionIndex,
+        optionIndex,
+        value
+    ) => {
+        const updated = [...testQuestions]
 
+        updated[questionIndex].options[
+            optionIndex
+            ] = value
+
+        setTestQuestions(updated)
+    }
+    const updateCorrectAnswer = (
+        questionIndex,
+        value
+    ) => {
+        const updated = [...testQuestions]
+
+        updated[questionIndex].correctAnswer =
+            value
+
+        setTestQuestions(updated)
+    }
   const loadMaterials = async () => {
     try {
-      const data = await MaterialAPI.getBySubject(selectedSubject.id)
+        const data =
+            await MaterialAPI.getBySubject(1)
       setMaterials(data)
     } catch (err) {
       console.log(err)
@@ -247,7 +277,7 @@ function AdminPage() {
       item.subcategory === activeSubcategory
   )
 
-  const handleCreateMaterial = async () => {
+    const handleCreateMaterial = async () => {
     try {
       if (!title) {
         alert("Введите название")
@@ -259,11 +289,11 @@ function AdminPage() {
       formData.append("description", description)
       formData.append("category", activeSection)
       formData.append("subcategory", activeSubcategory)
-      formData.append("subjectId", selectedSubject.id)
+        formData.append("subjectId", 1)
 
       let finalType = "PDF"
 
-      if (activeSubcategory.includes("Видео")) {
+      if (activeSubcategory?.includes("Видео")) {
         finalType = videoUrl ? "LINK" : "VIDEO"
       } else if (file) {
         const fileName = file.name.toLowerCase()
@@ -300,6 +330,119 @@ function AdminPage() {
     }
   }
 
+    const [selectedSubject] = useState({
+        id: 1,
+        title: "Технология сушки"
+    })
+
+    const loadTests = async () => {
+        try {
+            const data =
+                await TestAPI.getTestsBySubject(1)
+
+            setTests(data)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const handleSaveTest = async () => {
+        try {
+            for (const question of testQuestions) {
+                const formattedAnswers =
+                    question.options.map(option => ({
+                        text: option,
+                        isCorrect:
+                            option === question.correctAnswer
+                    }))
+
+                await TestAPI.createTest({
+                    testTitle: title,
+                    text: question.question,
+                    subjectId: 1,
+                    answers: formattedAnswers
+                })
+            }
+
+            alert("Тест успешно сохранен")
+            loadTests()
+
+            setTitle("")
+            setDescription("")
+
+            setTestQuestions([
+                {
+                    question: "",
+                    options: ["", "", "", ""],
+                    correctAnswer: ""
+                }
+            ])
+        } catch (error) {
+            console.log(error)
+            alert("Ошибка сохранения теста")
+        }
+    }
+
+    const [tests, setTests] = useState([])
+    const [openedTest, setOpenedTest] = useState(null)
+
+    useEffect(() => {
+        if (
+            activeSubcategory === "Тесты" &&
+            selectedSubject
+        ) {
+            loadTests()
+        }
+    }, [
+        activeSubcategory,
+        selectedSubject?.id
+    ])
+
+    const groupedTests = Object.values(
+        tests.reduce((acc, question) => {
+            const key =
+                question.testTitle ||
+                "Без названия"
+
+            if (!acc[key]) {
+                acc[key] = {
+                    title: key,
+                    questions: []
+                }
+            }
+
+            acc[key].questions.push(question)
+
+            return acc
+        }, {})
+    )
+
+    const handleDeleteTest = async (questions) => {
+        try {
+            for (const question of questions) {
+                await TestAPI.deleteQuestion(
+                    question.id
+                )
+            }
+
+            alert("Тест удален")
+
+            loadTests()
+
+            if (openedTest !== null) {
+                setOpenedTest(null)
+            }
+
+        } catch (error) {
+            console.log(error)
+            alert("Ошибка удаления теста")
+        }
+    }
+
+
+
+
+
   return (
     <div className="admin-page">
       <header className="admin-header">
@@ -333,64 +476,11 @@ function AdminPage() {
       {activeTab === 'content' ? (
         <div className="admin-content">
   <aside className="admin-sidebar">
-    <h3>Управление</h3>
-    
-    <div className="subject-actions">
-      <select
-        value={selectedSubject?.id || ""}
-        onChange={(e) => {
-          const subject = subjects.find(
-            s => s.id === Number(e.target.value)
-          )
-          setSelectedSubject(subject)
-        }}
-      >
-        {subjects.map(subject => (
-          <option key={subject.id} value={subject.id}>
-            {subject.title}
-          </option>
-        ))}
-      </select>
-
-      <button
-        className="add-subject-btn"
-        onClick={async () => {
-          try {
-            const subjectTitle = prompt("Введите название предмета")
-            if (!subjectTitle) return
-            await SubjectAPI.createSubject(subjectTitle, "")
-            await loadSubjects()
-            alert("Предмет добавлен")
-          } catch (err) {
-            console.log(err)
-            alert("Ошибка создания предмета")
-          }
-        }}
-      >
-        + Добавить предмет
-      </button>
-
-      <button
-        className="delete-subject-btn"
-        onClick={async () => {
-          try {
-            if (!selectedSubject) return
-            const confirmDelete = window.confirm(
-              `Удалить предмет "${selectedSubject.title}"?`
-            )
-            if (!confirmDelete) return
-            await SubjectAPI.deleteSubject(selectedSubject.id)
-            await loadSubjects()
-            alert("Предмет удален")
-          } catch (err) {
-            console.log(err)
-            alert("Ошибка удаления предмета")
-          }
-        }}
-      >
-        🗑️ Удалить предмет
-      </button>
-    </div>
+      <div className="subject-actions">
+          <div className="fixed-subject-box">
+              <strong>Технология сушки</strong>
+          </div>
+      </div>
 
     <h3>Категории</h3>
     
@@ -402,8 +492,21 @@ function AdminPage() {
             activeSection === section.category ? "active" : ""
           }`}
           onClick={() => {
-            setActiveSection(section.category)
-            setActiveSubcategory(null)
+              setActiveSection(section.category)
+              setActiveSubcategory(null)
+
+              setTitle("")
+              setDescription("")
+              setFile(null)
+              setVideoUrl("")
+
+              setTestQuestions([
+                  {
+                      question: "",
+                      options: ["", "", "", ""],
+                      correctAnswer: ""
+                  }
+              ])
           }}
         >
           {section.icon} {section.title}
@@ -434,112 +537,381 @@ function AdminPage() {
                   ))}
                 </div>
 
-                {activeSubcategory && (
-                  <>
-                    <div className="upload-box">
-                      <h3>Добавить материал</h3>
-                      <input
-                        type="text"
-                        placeholder="Название материала"
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
-                      />
-                      <textarea
-                        placeholder="Описание"
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
-                      />
-                      {activeSubcategory.includes("Видео") && (
-                        <input
-                          type="text"
-                          placeholder="YouTube ссылка (необязательно)"
-                          value={videoUrl}
-                          onChange={(e) => setVideoUrl(e.target.value)}
-                        />
-                      )}
-                      <label className="custom-file-upload">
-                        <input
-                          type="file"
-                          onChange={(e) => setFile(e.target.files[0])}
-                        />
-                        {file ? file.name : "📁 Выберите файл"}
-                      </label>
-                      <button onClick={handleCreateMaterial}>
-                        Добавить материал
-                      </button>
-                    </div>
+                  {!activeSubcategory ? (
+                      <div className="admin-empty">
+                          Выберите подкатегорию
+                      </div>
+                  ) : activeSubcategory === "Тесты" ? (
+                      <div className="upload-box">
+                          <h3>Создание теста</h3>
 
-                    <div className="materials-list">
-                      {filteredMaterials.map((material) => (
-                        <div key={material.id} className="material-card">
-                          <div className="material-info">
-                            <h4>{material.title}</h4>
-                            <p>{material.description}</p>
+                          <input
+                              type="text"
+                              placeholder="Название теста"
+                              value={title}
+                              onChange={(e) =>
+                                  setTitle(e.target.value)
+                              }
+                          />
+
+                          <textarea
+                              placeholder="Описание теста"
+                              value={description}
+                              onChange={(e) =>
+                                  setDescription(e.target.value)
+                              }
+                          />
+
+                          {testQuestions.map(
+                              (question, qIndex) => (
+                                  <div
+                                      key={qIndex}
+                                      className="test-question-box"
+                                  >
+                                      <h4>
+                                          Вопрос {qIndex + 1}
+                                      </h4>
+
+                                      <textarea
+                                          placeholder="Введите вопрос"
+                                          value={question.question}
+                                          onChange={(e) =>
+                                              updateQuestionText(
+                                                  qIndex,
+                                                  e.target.value
+                                              )
+                                          }
+                                      />
+
+                                      <div className="options-list">
+                                          {question.options.map(
+                                              (
+                                                  option,
+                                                  optionIndex
+                                              ) => (
+                                                  <input
+                                                      key={
+                                                          optionIndex
+                                                      }
+                                                      type="text"
+                                                      placeholder={`Вариант ${
+                                                          optionIndex +
+                                                          1
+                                                      }`}
+                                                      value={
+                                                          option
+                                                      }
+                                                      onChange={(
+                                                          e
+                                                      ) =>
+                                                          updateOption(
+                                                              qIndex,
+                                                              optionIndex,
+                                                              e.target
+                                                                  .value
+                                                          )
+                                                      }
+                                                  />
+                                              )
+                                          )}
+                                      </div>
+
+                                      <select
+                                          className="correct-answer-select"
+                                          value={
+                                              question.correctAnswer
+                                          }
+                                          onChange={(e) =>
+                                              updateCorrectAnswer(
+                                                  qIndex,
+                                                  e.target.value
+                                              )
+                                          }
+                                      >
+                                          <option value="">
+                                              Выберите правильный
+                                              ответ
+                                          </option>
+
+                                          {question.options.map(
+                                              (
+                                                  option,
+                                                  index
+                                              ) => (
+                                                  <option
+                                                      key={
+                                                          index
+                                                      }
+                                                      value={
+                                                          option
+                                                      }
+                                                  >
+                                                      {option ||
+                                                          `Вариант ${
+                                                              index +
+                                                              1
+                                                          }`}
+                                                  </option>
+                                              )
+                                          )}
+                                      </select>
+                                  </div>
+                              )
+                          )}
+
+                          <button
+                              className="add-question-btn"
+                              onClick={addQuestion}
+                          >
+                              + Добавить вопрос
+                          </button>
+
+                          <button
+                              className="save-test-btn"
+                              onClick={handleSaveTest}
+                          >
+                              Сохранить тест
+                          </button>
+                          <div className="saved-tests-list">
+                              <h3 className="saved-tests-title">
+                                  Созданные тесты
+                              </h3>
+
+                              {groupedTests.length > 0 ? (
+                                  groupedTests.map((test, index) => (
+                                      <div
+                                          key={index}
+                                          className="saved-test-card"
+                                      >
+                                          <div className="test-card-info">
+                                              <h4
+                                                  className="test-title-name clickable-test-title"
+                                                  onClick={() =>
+                                                      setOpenedTest(
+                                                          openedTest === index
+                                                              ? null
+                                                              : index
+                                                      )
+                                                  }
+                                              >
+                                                  {test.title}
+                                              </h4>
+
+                                              <p>
+                                                  Всего вопросов:
+                                                  {test.questions.length}
+                                              </p>
+
+                                              {openedTest === index && (
+                                                  <div className="test-details-box">
+                                                      {test.questions.map(
+                                                          (question, qIndex) => (
+                                                              <div
+                                                                  key={question.id}
+                                                                  className="question-preview-card"
+                                                              >
+                                                                  <h5>
+                                                                      {qIndex + 1}.{" "}
+                                                                      {question.text}
+                                                                  </h5>
+
+                                                                  <div className="answers-preview">
+                                                                      {question.answers.map(
+                                                                          (
+                                                                              answer
+                                                                          ) => (
+                                                                              <p
+                                                                                  key={
+                                                                                      answer.id
+                                                                                  }
+                                                                                  className={
+                                                                                      answer.isCorrect
+                                                                                          ? "correct-answer-preview"
+                                                                                          : ""
+                                                                                  }
+                                                                              >
+                                                                                  {answer.isCorrect
+                                                                                      ? "✅"
+                                                                                      : "•"}{" "}
+                                                                                  {
+                                                                                      answer.text
+                                                                                  }
+                                                                              </p>
+                                                                          )
+                                                                      )}
+                                                                  </div>
+                                                              </div>
+                                                          )
+                                                      )}
+                                                  </div>
+                                              )}
+                                          </div>
+
+                                          <button
+                                              className="delete-test-btn"
+                                              onClick={() =>
+                                                  handleDeleteTest(
+                                                      test.questions
+                                                  )
+                                              }
+                                          >
+                                              🗑 Удалить
+                                          </button>
+                                      </div>
+                                  ))
+                              ) : (
+                                  <p>Тестов пока нет</p>
+                              )}
                           </div>
-                          <div className="material-actions">
-                            {(material.type === "VIDEO" || material.type === "LINK") ? (
-                              <button
-                                className="watch-btn"
-                                onClick={() => window.open(material.url, "_blank")}
-                              >
-                                Смотреть
-                              </button>
-                            ) : (
-                              <button
-                                className="download-btn"
-                                onClick={() => MaterialAPI.downloadMaterial(material.id)}
-                              >
-                                Скачать
-                              </button>
-                            )}
-                            <button
-                              className="edit-btn"
-                              onClick={async () => {
-                                try {
-                                  const newTitle = prompt(
-                                    "Введите новое название",
-                                    material.title
-                                  )
-                                  if (!newTitle) return
-                                  const newDescription = prompt(
-                                    "Введите новое описание",
-                                    material.description
-                                  )
-                                  const formData = new FormData()
-                                  formData.append("title", newTitle)
-                                  formData.append("description", newDescription)
-                                  await MaterialAPI.updateMaterial(material.id, formData)
-                                  await loadMaterials()
-                                  alert("Материал обновлен")
-                                } catch (err) {
-                                  console.log(err)
-                                  alert("Ошибка обновления")
-                                }
-                              }}
-                            >
-                              Изменить
-                            </button>
-                            <button
-                              className="delete-btn"
-                              onClick={async () => {
-                                try {
-                                  await MaterialAPI.deleteMaterial(material.id)
-                                  loadMaterials()
-                                  alert("Материал удален")
-                                } catch (err) {
-                                  console.log(err)
-                                  alert("Ошибка удаления")
-                                }
-                              }}
-                            >
-                              Удалить
-                            </button>
+                      </div>
+                  ) : (
+                      <div className="upload-box">
+                          <h3>Добавить материал</h3>
+
+                          <input
+                              type="text"
+                              placeholder="Название материала"
+                              value={title}
+                              onChange={(e) =>
+                                  setTitle(e.target.value)
+                              }
+                          />
+
+                          <textarea
+                              placeholder="Описание"
+                              value={description}
+                              onChange={(e) =>
+                                  setDescription(e.target.value)
+                              }
+                          />
+
+                          {activeSubcategory?.includes(
+                              "Видео"
+                          ) && (
+                              <input
+                                  type="text"
+                                  placeholder="YouTube ссылка"
+                                  value={videoUrl}
+                                  onChange={(e) =>
+                                      setVideoUrl(
+                                          e.target.value
+                                      )
+                                  }
+                              />
+                          )}
+
+                          <label className="custom-file-upload">
+                              <input
+                                  type="file"
+                                  onChange={(e) =>
+                                      setFile(
+                                          e.target.files[0]
+                                      )
+                                  }
+                              />
+                              {file
+                                  ? file.name
+                                  : "📁 Выберите файл"}
+                          </label>
+
+                          <button
+                              onClick={
+                                  handleCreateMaterial
+                              }
+                          >
+                              Добавить материал
+                          </button>
+                      </div>
+                  )}
+                  {activeSubcategory &&
+                      activeSubcategory !== "Тесты" && (
+                          <div className="materials-list">
+                              <h3>Загруженные материалы</h3>
+
+                              {filteredMaterials.length > 0 ? (
+                                  filteredMaterials.map((material) => (
+                                      <div
+                                          key={material.id}
+                                          className="material-item"
+                                      >
+                                          <div className="material-info">
+                                              <h4>
+                                                  {material.title || material.fileName}
+                                              </h4>
+
+                                              <p>
+                                                  {material.description ||
+                                                      "Описание отсутствует"}
+                                              </p>
+
+                                              <div className="material-meta">
+            <span>
+                📁 {material.type}
+            </span>
+                                              </div>
+                                          </div>
+
+                                          <div className="material-actions">
+
+                                              {/* Для видео */}
+                                              {["VIDEO", "LINK"].includes(material.type) ? (
+                                                  <a
+                                                      href={material.url}
+                                                      target="_blank"
+                                                      rel="noopener noreferrer"
+                                                      className="watch-btn"
+                                                  >
+                                                      ▶ Смотреть
+                                                  </a>
+                                              ) : (
+                                                  <>
+                                                      {/* Скачать */}
+                                                      <a
+                                                          href={`https://umk-qu6t.onrender.com/materials/download/${material.id}`}
+                                                          className="download-btn"
+                                                      >
+                                                          ⬇ Скачать
+                                                      </a>
+                                                  </>
+                                              )}
+
+                                              {/* Изменить */}
+                                              <button
+                                                  className="edit-btn"
+                                                  onClick={() => {
+                                                      setTitle(
+                                                          material.title ||
+                                                          material.fileName ||
+                                                          ""
+                                                      )
+
+                                                      setDescription(
+                                                          material.description || ""
+                                                      )
+                                                  }}
+                                              >
+                                                  ✏️ Изменить
+                                              </button>
+
+                                              {/* Удалить */}
+                                              <button
+                                                  className="delete-btn"
+                                                  onClick={() =>
+                                                      handleDeleteMaterial(material.id)
+                                                  }
+                                              >
+                                                  🗑 Удалить
+                                              </button>
+                                          </div>
+                                      </div>
+                                  ))
+                              ) : (
+                                  <p>
+                                      Материалы пока не добавлены
+                                  </p>
+                              )}
                           </div>
-                        </div>
-                      ))}
-                    </div>
-                  </>
-                )}
+                      )}
               </>
             )}
           </main>
@@ -618,7 +990,7 @@ function AdminPage() {
               </div>
 
               <div className="analytics-card">
-                <h3>🔥 Популярные материалы</h3>
+                <h3>Популярные материалы</h3>
                 <div className="materials-stats-list">
                   {materialsProgress.slice(0, 5).map((mat, index) => (
                     <div key={index} className="material-stat-item">

@@ -41,47 +41,91 @@ function ProfilePage() {
     loadUserData()
   }, [])
 
-  const loadUserData = () => {
-    setLoading(true)
-    
-    // ==========================================
-    // ВРЕМЕННО: Данные из localStorage
-    // В БУДУЩЕМ: Заменить на API запросы
-    // ==========================================
-    
-    // Получаем прогресс из localStorage
-    const savedProgress = localStorage.getItem('user_progress')
-    const userProgress = savedProgress ? JSON.parse(savedProgress) : {
-      completedMaterials: getMockCompletedMaterials(),
-      testResults: getMockTestResults(),
-      totalTimeSpent: 1240, // минуты
-      lastActivity: new Date().toISOString(),
-      achievements: getMockAchievements()
+    const loadUserData = async () => {
+        try {
+            setLoading(true)
+
+            const token = localStorage.getItem("accessToken")
+
+            const [userRes, testRes] = await Promise.all([
+                fetch("https://umk-qu6t.onrender.com/auth/me", {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }),
+                fetch("https://umk-qu6t.onrender.com/test/my-results", {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                })
+            ])
+
+            const userData = await userRes.json()
+            const testData = await testRes.json()
+
+            // if (userData.role === "ADMIN") {
+            //     navigate("/admin")
+            //     return
+            // }
+
+            // настройки пока оставляем localStorage
+            const savedSettings = localStorage.getItem("user_settings")
+
+            const userSettings = savedSettings
+                ? JSON.parse(savedSettings)
+                : {
+                    notifications: true,
+                    language: "ru",
+                    theme: "light"
+                }
+
+            // completed materials пока mock
+            const completedMaterials = getMockCompletedMaterials()
+            const achievements = getMockAchievements()
+
+            // преобразуем результаты тестов с backend под твой UI
+            const formattedTests = testData.map(test => ({
+                id: test.id,
+                title: test.subject?.title || "Тест",
+                score: test.score,
+                maxScore: test.total,
+                date: test.createdAt,
+                passed: test.percent >= 70
+            }))
+
+            setProfileData(prev => ({
+                ...prev,
+
+                // реальные данные с backend
+                name: userData.name,
+                email: userData.email,
+                role: userData.role,
+                joinDate: userData.createdAt,
+
+                // тесты реальные
+                testResults: formattedTests,
+
+                // пока временные
+                completedMaterials,
+                achievements,
+                totalTimeSpent: 1240,
+
+                settings: userSettings,
+
+                stats: {
+                    totalMaterials: 48,
+                    completedCount: completedMaterials.length,
+                    averageScore: calculateAverageScore(formattedTests),
+                    certificates: 2
+                }
+            }))
+
+        } catch (error) {
+            console.log("Ошибка загрузки профиля:", error)
+        } finally {
+            setLoading(false)
+        }
     }
-
-    // Получаем сохраненные настройки
-    const savedSettings = localStorage.getItem('user_settings')
-    const userSettings = savedSettings ? JSON.parse(savedSettings) : {
-      notifications: true,
-      language: 'ru',
-      theme: 'light'
-    }
-
-    setProfileData(prev => ({
-      ...prev,
-      ...userProgress,
-      settings: userSettings,
-      stats: {
-        totalMaterials: 48, // TODO: GET /api/user/stats
-        completedCount: userProgress.completedMaterials.length,
-        averageScore: calculateAverageScore(userProgress.testResults),
-        certificates: 2 // TODO: GET /api/user/certificates
-      }
-    }))
-
-    setLoading(false)
-  }
-
   // Моковые данные для демонстрации (потом удалить)
   const getMockCompletedMaterials = () => {
     return [
@@ -202,11 +246,10 @@ function ProfilePage() {
           </div>
           <div className="profile-status online"></div>
         </div>
-        <h1 className="profile-name">{profileData.name}</h1>
+        <h1 className="profile-name">{profileData.name }</h1>
         <p className="profile-email">{profileData.email}</p>
         <span className="profile-role">
           {profileData.role === 'student' && '🎓 Студент'}
-          {profileData.role === 'teacher' && '👨‍🏫 Преподаватель'}
           {profileData.role === 'admin' && '👑 Администратор'}
         </span>
       </div>
