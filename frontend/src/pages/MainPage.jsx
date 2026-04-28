@@ -257,7 +257,7 @@ function App() {
         try {
             if (
                 userAnswers.length !==
-                tests.length
+                selectedTest.questions.length
             ) {
                 alert(
                     "Ответьте на все вопросы"
@@ -267,8 +267,8 @@ function App() {
 
             const result =
                 await TestAPI.submitTest({
-                    subjectId:
-                    selectedSubject.id,
+                    subjectId: selectedSubject.id,
+                    testTitle: selectedTest.title,
                     answers: userAnswers
                 })
 
@@ -370,9 +370,9 @@ function App() {
                 </div>
 
                 </div>
-                
+
             </div>
-            
+
 
 
 
