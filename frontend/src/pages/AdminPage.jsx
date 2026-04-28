@@ -15,28 +15,44 @@ const UserAnalyticsAPI = {
   BASE_URL: 'https://umk-qu6t.onrender.com',
 
   // Получить всех пользователей и их результаты тестов
-  async getUsersAnalytics() {
-    const token = localStorage.getItem('accessToken')
-    const response = await fetch(`${this.BASE_URL}/tests/analytics/users`, {
-      headers: {
-        'Authorization': `Bearer ${token}`
-      }
-    })
-    if (!response.ok) throw new Error('Ошибка загрузки аналитики')
-    return response.json()
-  },
+    async getUsersAnalytics() {
+        const token = localStorage.getItem("accessToken")
+
+        const response = await fetch(
+            `${this.BASE_URL}/test/analytics/users`,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }
+        )
+
+        if (!response.ok) {
+            throw new Error("Ошибка загрузки аналитики")
+        }
+
+        return response.json()
+    },
 
   // Получить историю тестов конкретного пользователя
-  async getUserTestHistory(userId) {
-    const token = localStorage.getItem('accessToken')
-    const response = await fetch(`${this.BASE_URL}/tests/user/${userId}/results`, {
-      headers: {
-        'Authorization': `Bearer ${token}`
-      }
-    })
-    if (!response.ok) throw new Error('Ошибка загрузки истории тестов')
-    return response.json()
-  },
+    async getUserTestHistory(userId) {
+        const token = localStorage.getItem('accessToken')
+
+        const response = await fetch(
+            `${this.BASE_URL}/test/user/${userId}/results`,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }
+        )
+
+        if (!response.ok) {
+            throw new Error("Ошибка загрузки истории тестов")
+        }
+
+        return response.json()
+    },
 
   // Получить статистику просмотров материалов
   async getMaterialsProgress() {
@@ -203,28 +219,6 @@ function AdminPage() {
       setUsersAnalytics(data.users || data || [])
     } catch (err) {
       console.log('Ошибка загрузки аналитики:', err)
-      // Если API недоступен, показываю моковые данные для демонстрации
-      // тут выдает 404 посмотри что в беке
-      setUsersAnalytics([
-        {
-          id: 1,
-          name: "Иван ТЕСТ",
-          email: "ivan@example.com",
-          testsCompleted: 5,
-          averageScore: 85,
-          materialsViewed: 12,
-          lastActive: "2026-02-15"
-        },
-        {
-          id: 2,
-          name: "Мария ТЕСТ",
-          email: "maria@example.com",
-          testsCompleted: 3,
-          averageScore: 92,
-          materialsViewed: 8,
-          lastActive: "2026-02-14"
-        }
-      ])
     } finally {
       setLoadingAnalytics(false)
     }
@@ -236,11 +230,6 @@ function AdminPage() {
       setMaterialsProgress(data.progress || data || [])
     } catch (err) {
       console.log('Ошибка загрузки прогресса:', err)
-      // Моковые данные
-      setMaterialsProgress([
-        { materialId: 1, title: "Введение в сушку", views: 25, uniqueUsers: 18 },
-        { materialId: 2, title: "Методы сушки", views: 20, uniqueUsers: 15 }
-      ])
     }
   }
 
@@ -250,11 +239,6 @@ function AdminPage() {
       setSelectedUserHistory(data)
     } catch (err) {
       console.log('Ошибка загрузки истории:', err)
-      // Моковые данные
-      setSelectedUserHistory([
-        { id: 1, title: "Тест по основам", score: 85, maxScore: 100, date: "2024-02-10" },
-        { id: 2, title: "Итоговый тест", score: 92, maxScore: 100, date: "2024-02-15" }
-      ])
     }
   }
 

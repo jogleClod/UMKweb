@@ -187,11 +187,7 @@ function ProfilePage() {
         <button onClick={() => navigate('/')} className="back-button">
             {t.main}
         </button>
-        <button onClick={handleLogout} className="logout-button">
-            {language === "kg"
-                ? "Чыгуу"
-                : "Выйти"}
-        </button>
+
 
           <div className="language-switcher">
               <button
@@ -220,6 +216,12 @@ function ProfilePage() {
                   KG
               </button>
           </div>
+
+          <button onClick={handleLogout} className="logout-button">
+              {language === "kg"
+                  ? "Чыгуу"
+                  : "Выйти"}
+          </button>
       </div>
 
       {/* Шапка профиля */}
