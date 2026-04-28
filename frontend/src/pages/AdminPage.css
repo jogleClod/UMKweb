@@ -356,9 +356,27 @@
 }
 
 .admin-header h1 {
-    font-size: 42px;
+    font-size: 30px;
     font-weight: bold;
     color: #1e293b;
+}
+
+.logo-circle {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: #2f4f8f;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+.logo-circle img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; 
 }
 
 .admin-header select {

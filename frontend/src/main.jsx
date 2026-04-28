@@ -5,7 +5,6 @@ import { AuthProvider } from './context/AuthContext'
 import App from './App.jsx'
 import './index.css'
 
-//CЮДЫ НЕ ТРОГАТЬ
 // Я тут Переопределяю alert на красивый toast :D
 const originalAlert = window.alert
 window.alert = (message) => {
