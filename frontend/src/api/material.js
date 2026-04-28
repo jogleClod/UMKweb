@@ -97,6 +97,20 @@ class MaterialAPI {
 
         return response.json()
     }
+
+    static async markProgress(id) {
+        const response = await fetch(
+            `${API_URL}/materials/progress/${id}`,
+            {
+                method: "POST",
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("accessToken")}`
+                }
+            }
+        )
+
+        return response.json()
+    }
 }
 
 export default MaterialAPI
