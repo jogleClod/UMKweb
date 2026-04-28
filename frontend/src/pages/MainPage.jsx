@@ -309,149 +309,153 @@ function App() {
         translations[language]
 
     return (
-        <div className="main-container">
+  <div className="page">
 
-            {/* TOP BAR */}
-            <div className="top-bar">
-                <div className="left-header">
-                    <div
-                        className="logo-circle"
-                        onClick={handleBadgeClick}
-                    >
-                        <img src={logoIcon} alt="logo"/>
+    {/* HEADER */}
+      <div className="top-bar">
+          <div className="top-bar-inner">
 
-                        {showHint && (
-                            <div className="hint-box">
-                                Ещё {3 - clickCountRef.current} нажатия
-                            </div>
-                        )}
-                    </div>
+              <div className="left-header">
+                  <div
+                      className="logo-circle"
+                      onClick={handleBadgeClick}
+                  >
+                      <img
+                          src={logoIcon}
+                          alt="logo"
+                      />
 
-                    <div className="header-text-block">
-                        <h1>{t.title}</h1>
+                      {showHint && (
+                          <div className="hint-box">
+                              Ещё {3 - clickCountRef.current} нажатия
+                          </div>
+                      )}
+                  </div>
 
-                    </div>
-                </div>
+                  <div className="header-text-block">
+                      <h1>{t.title}</h1>
+                  </div>
+              </div>
 
-                <div className="prof-cont">
-                    <div className="language-switcher">
-                    <button
-                        className={
-                            language === "ru"
-                                ? "active-lang"
-                                : ""
-                        }
-                        onClick={() =>
-                            setLanguage("ru")
-                        }
-                    >
-                        RU
-                    </button>
+              <div className="right-header">
 
-                    <button
-                        className={
-                            language === "kg"
-                                ? "active-lang"
-                                : ""
-                        }
-                        onClick={() =>
-                            setLanguage("kg")
-                        }
-                    >
-                        KG
-                    </button>
-                </div>
-                <div
-                    className="profile-btn"
-                    onClick={() => navigate("/profile")}
-                >
-                    <img className="icon"
-                        src={profileIcon} alt={"profile-user-account"} />
-                </div>
+                  <div className="language-switcher">
+                      <button
+                          className={
+                              language === "ru"
+                                  ? "active-lang"
+                                  : ""
+                          }
+                          onClick={() =>
+                              setLanguage("ru")
+                          }
+                      >
+                          RU
+                      </button>
 
-                </div>
+                      <button
+                          className={
+                              language === "kg"
+                                  ? "active-lang"
+                                  : ""
+                          }
+                          onClick={() =>
+                              setLanguage("kg")
+                          }
+                      >
+                          KG
+                      </button>
+                  </div>
 
-            </div>
+                  <div
+                      className="profile-btn"
+                      onClick={() =>
+                          navigate("/profile")
+                      }
+                  >
+                      <img
+                          className="icon"
+                          src={profileIcon}
+                          alt="profile-user-account"
+                      />
+                  </div>
 
+              </div>
+          </div>
+      </div>
 
+    {/* CONTENT */}
+    <div className="main-container">
 
+      {/* MAIN NAV */}
+      <div className="horizontal-menu">
 
-            {/* MAIN NAV LIKE PHOTO */}
-            <div className="horizontal-menu">
+        <div className="menu-column home-column">
+          <h3>{t.main}</h3>
+        </div>
 
-                <div className="menu-column home-column">
-                    <h3>{t.main}</h3>
-                </div>
+        {tabs.map(tab => (
+          <div
+            key={tab.key}
+            className={`menu-column ${
+              activeCategory === tab.category
+                ? "active-column"
+                : ""
+            }`}
+          >
+            <h3
+              onClick={() => {
+                if (openedMenu === tab.category) {
+                  setOpenedMenu(null)
+                } else {
+                  setOpenedMenu(tab.category)
+                }
 
-                {tabs.map(tab => (
-                    <div
-                        key={tab.key}
-                        className={`menu-column ${
-                            activeCategory === tab.category
-                                ? "active-column"
-                                : ""
-                        }`}
-                    >
-                        <h3
-                            onClick={() => {
-                                // открытие/закрытие подменю
-                                if (openedMenu === tab.category) {
-                                    setOpenedMenu(null)
-                                } else {
-                                    setOpenedMenu(tab.category)
-                                }
+                setActiveCategory(tab.category)
 
-                                setActiveCategory(tab.category)
+                if (
+                  tab.category &&
+                  subcategoryMap[tab.category]?.length > 0
+                ) {
+                  setActiveSubcategory(
+                    subcategoryMap[tab.category][0].ru
+                  )
+                }
+              }}
+            >
+              {t[tab.key]}
+            </h3>
 
-                                if (
-                                    tab.category &&
-                                    subcategoryMap[tab.category]?.length > 0
-                                ) {
-                                    setActiveSubcategory(
-                                        subcategoryMap[tab.category][0].ru
-                                    )
-                                }
-                            }}
-                        >
-                            {t[tab.key]}
-                        </h3>
-
-                        <div
-                            className={`submenu ${
-                                openedMenu === tab.category
-                                    ? "submenu-open"
-                                    : ""
-                            }`}
-                        >
-                            {openedMenu === tab.category &&
-                                subcategoryMap[tab.category]?.map(sub => (
-                                    <p
-                                        key={sub.key}
-                                        className={
-                                            activeSubcategory === sub.ru
-                                                ? "active-subcategory"
-                                                : ""
-                                        }
-                                        onClick={() => {
-                                            setActiveCategory(
-                                                tab.category
-                                            )
-
-                                            // в state сохраняем русское значение для БД
-                                            setActiveSubcategory(
-                                                sub.ru
-                                            )
-                                        }}
-                                    >
-                                        • {language === "kg"
-                                        ? sub.kg
-                                        : sub.ru}
-                                    </p>
-                                ))}
-                        </div>
-                    </div>
+            <div
+              className={`submenu ${
+                openedMenu === tab.category
+                  ? "submenu-open"
+                  : ""
+              }`}
+            >
+              {openedMenu === tab.category &&
+                subcategoryMap[tab.category]?.map(sub => (
+                  <p
+                    key={sub.key}
+                    className={
+                      activeSubcategory === sub.ru
+                        ? "active-subcategory"
+                        : ""
+                    }
+                    onClick={() => {
+                      setActiveCategory(tab.category)
+                      setActiveSubcategory(sub.ru)
+                    }}
+                  >
+                    • {language === "kg" ? sub.kg : sub.ru}
+                  </p>
                 ))}
             </div>
+          </div>
+        ))}
+      </div>
+
+    </div>
 
             {/* MATERIALS */}
             <div className="materials-section">

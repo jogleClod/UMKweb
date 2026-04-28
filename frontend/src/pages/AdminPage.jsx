@@ -5,6 +5,8 @@ import { useAuth } from "../hooks/useAuth"
 import MaterialAPI from "../api/material"
 import "./AdminPage.css"
 import TestAPI from "../api/test"
+import logoIcon from "../assets/ic_logo.png"
+
 
 // ==========================================
 // НОВЫЙ API для аналитики пользователей
@@ -446,8 +448,14 @@ function AdminPage() {
   return (
     <div className="admin-page">
       <header className="admin-header">
+        <div
+                    className="logo-circle"
+                  >
+                    <img src={logoIcon} alt="logo" />
+        
+                  </div>
         <div>
-          <h1>📚 Панель администратора</h1>
+          <h1> Панель администратора</h1>
           <p>{user?.name}</p>
         </div>
 
