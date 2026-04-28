@@ -6,6 +6,9 @@ import { useNavigate } from "react-router-dom"
 import "../pages/MainPage.css"
 import TestAPI from "../api/test"
 import { translations } from "../constants/translations"
+import profileIcon from "../assets/ic_prof.svg"
+import logoIcon from "../assets/ic_logo.png"
+
 
 const tabs = [
     {
@@ -307,9 +310,7 @@ function App() {
                         className="logo-circle"
                         onClick={handleBadgeClick}
                     >
-                        <div className="logo-inner-text">
-                            УМК
-                        </div>
+                        <img src={logoIcon} alt="logo"/>
 
                         {showHint && (
                             <div className="hint-box">
@@ -324,15 +325,8 @@ function App() {
                     </div>
                 </div>
 
-                <div
-                    className="profile-btn"
-                    onClick={() => navigate("/profile")}
-                >
-                    <img className="icon"
-                        src={"https://www.svgrepo.com/show/343494/profile-user-account.svg"} alt={"profile-user-account"} />
-                </div>
-
-                <div className="language-switcher">
+                <div className="prof-cont">
+                    <div className="language-switcher">
                     <button
                         className={
                             language === "ru"
@@ -359,7 +353,18 @@ function App() {
                         KG
                     </button>
                 </div>
+                <div
+                    className="profile-btn"
+                    onClick={() => navigate("/profile")}
+                >
+                    <img className="icon"
+                        src={profileIcon} alt={"profile-user-account"} />
+                </div>
+
+                </div>
+                
             </div>
+            
 
 
 

@@ -30,7 +30,6 @@ function ProfilePage() {
       totalMaterials: 0,
       completedCount: 0,
       averageScore: 0,
-      certificates: 0
     }
   })
 
@@ -79,11 +78,9 @@ function ProfilePage() {
                     theme: "light"
                 }
 
-            // completed materials пока mock
             const completedMaterials = getMockCompletedMaterials()
             const achievements = getMockAchievements()
 
-            // преобразуем результаты тестов с backend под твой UI
             const formattedTests = testData.map(test => ({
                 id: test.id,
                 title: test.subject?.title || "Тест",
@@ -96,16 +93,13 @@ function ProfilePage() {
             setProfileData(prev => ({
                 ...prev,
 
-                // реальные данные с backend
                 name: userData.name,
                 email: userData.email,
                 role: userData.role,
                 joinDate: userData.createdAt,
 
-                // тесты реальные
                 testResults: formattedTests,
 
-                // пока временные
                 completedMaterials,
                 achievements,
                 totalTimeSpent: 1240,
@@ -116,7 +110,6 @@ function ProfilePage() {
                     totalMaterials: 48,
                     completedCount: completedMaterials.length,
                     averageScore: calculateAverageScore(formattedTests),
-                    certificates: 2
                 }
             }))
 
@@ -126,7 +119,6 @@ function ProfilePage() {
             setLoading(false)
         }
     }
-  // Моковые данные для демонстрации (потом удалить)
   const getMockCompletedMaterials = () => {
     return [
       { 
@@ -271,11 +263,7 @@ function ProfilePage() {
           <span className="stat-value">{formatTime(profileData.totalTimeSpent)}</span>
           <span className="stat-label">Времени обучения</span>
         </div>
-        <div className="stat-card">
-          <span className="stat-icon">🏆</span>
-          <span className="stat-value">{profileData.stats.certificates}</span>
-          <span className="stat-label">Сертификатов</span>
-        </div>
+        
       </div>
 
       {/* Табы */}
@@ -292,12 +280,7 @@ function ProfilePage() {
         >
           📝 Тесты
         </button>
-        <button 
-          className={`profile-tab ${activeTab === 'achievements' ? 'active' : ''}`}
-          onClick={() => setActiveTab('achievements')}
-        >
-          🏆 Достижения
-        </button>
+        
         <button 
           className={`profile-tab ${activeTab === 'settings' ? 'active' : ''}`}
           onClick={() => setActiveTab('settings')}
@@ -380,31 +363,6 @@ function ProfilePage() {
           </div>
         )}
 
-        {/* Достижения */}
-        {activeTab === 'achievements' && (
-          <div className="achievements-section">
-            <h2>Достижения</h2>
-            <div className="achievements-grid">
-              {profileData.achievements.map((achievement) => (
-                <div 
-                  key={achievement.id} 
-                  className={`achievement-card ${achievement.unlocked ? 'unlocked' : 'locked'}`}
-                >
-                  <span className="achievement-icon">
-                    {achievement.unlocked ? achievement.icon : '🔒'}
-                  </span>
-                  <h3>{achievement.title}</h3>
-                  <p>{achievement.description}</p>
-                  {!achievement.unlocked && (
-                    <div className="locked-overlay">
-                      <span>🔒</span>
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
 
         {/* Настройки */}
         {activeTab === 'settings' && (
