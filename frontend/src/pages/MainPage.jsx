@@ -333,7 +333,7 @@ function App() {
                   </div>
 
                   <div className="header-text-block">
-                      <h1>{t.title}</h1>
+                      <h1>{t.titleMainPage}</h1>
                   </div>
               </div>
 

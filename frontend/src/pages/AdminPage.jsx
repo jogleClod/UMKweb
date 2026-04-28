@@ -770,7 +770,7 @@ function AdminPage() {
                       </div>
                   ) : (
                       <div className="upload-box">
-                          <h3>Добавить материал</h3>
+                          <h3>{t.addMaterial}</h3>
 
                           <input
                               type="text"
@@ -830,7 +830,7 @@ function AdminPage() {
                   {activeSubcategory &&
                       activeSubcategory !== "Тесты" && (
                           <div className="materials-list">
-                              <h3>Загруженные материалы</h3>
+                              <h3>{t.uploadedMaterials}</h3>
 
                               {filteredMaterials.length > 0 ? (
                                   filteredMaterials.map((material) => (
@@ -979,7 +979,7 @@ function AdminPage() {
                     <span className="analytics-value">
                       {usersAnalytics.reduce((sum, u) => sum + (u.testsCompleted || 0), 0)}
                     </span>
-                    <span className="analytics-label">{t.textTaken}</span>
+                    <span className="analytics-label">{t.testsTaken}</span>
                   </div>
                   <div className="analytics-stat">
                     <span className="analytics-value">

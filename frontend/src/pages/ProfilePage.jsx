@@ -78,12 +78,6 @@ function ProfilePage() {
             const testData = await testRes.json()
             const statsData = await statsRes.json()
 
-            // if (userData.role === "ADMIN") {
-            //     navigate("/admin")
-            //     return
-            // }
-
-            // настройки пока оставляем localStorage
             const savedSettings = localStorage.getItem("user_settings")
 
             const globalLanguage =
@@ -99,7 +93,7 @@ function ProfilePage() {
             const formattedTests = testData.map(test => ({
                 id: test.id,
                 subjectTitle: test.subject?.title || "Предмет",
-                title: test.testTitle || "Без названия теста",
+                title: test.testTitle || `${t.noTitileTest}`,
                 score: test.score,
                 maxScore: test.total,
                 date: test.createdAt,
@@ -143,15 +137,15 @@ function ProfilePage() {
             setLoading(false)
         }
     }
+            const t = translations[language]
+            useEffect(() => {
+            loadUserData()
+            }, [])
 
-    useEffect(() => {
-        loadUserData()
-    }, [])
 
-    const t = translations[language]
+
 
   const handleLogout = () => {
-    // Очищаем локальные данные
     localStorage.removeItem('user_progress')
     localStorage.removeItem('user_settings')
     logout()
@@ -175,7 +169,7 @@ function ProfilePage() {
     return (
       <div className="profile-loading">
         <div className="loading-spinner"></div>
-        <p>Загрузка профиля...</p>
+        <p>{t.loadingProfile}</p>
       </div>
     )
   }
@@ -294,7 +288,7 @@ function ProfilePage() {
         {/* Прогресс обучения */}
         {activeTab === 'progress' && (
           <div className="progress-section">
-            <h2>Пройденные материалы</h2>
+            <h2>{t.pastMat}</h2>
             {profileData.completedMaterials.length > 0 ? (
               <div className="materials-list">
                 {profileData.completedMaterials.map((material) => (
@@ -317,9 +311,9 @@ function ProfilePage() {
               </div>
             ) : (
               <div className="empty-state">
-                <p>Вы еще не прошли ни одного материала</p>
+                <p>{t.noTestPassed}</p>
                 <button onClick={() => navigate('/')}>
-                  Начать обучение
+                  {t.startLesson}
                 </button>
               </div>
             )}
@@ -329,7 +323,7 @@ function ProfilePage() {
         {/* Результаты тестов */}
         {activeTab === 'tests' && (
           <div className="tests-section">
-            <h2>Результаты тестов</h2>
+            <h2>{t.resultTest}</h2>
             {profileData.testResults.length > 0 ? (
               <div className="tests-list">
                 {profileData.testResults.map((test) => (
@@ -348,7 +342,7 @@ function ProfilePage() {
 
                                 <div className="modern-test-meta">
                                     <span>📋 Тест</span>
-                                    <span>• {test.maxScore} вопросов</span>
+                                    <span>• {test.maxScore} {t.questions}</span>
                                 </div>
                             </div>
 
@@ -359,9 +353,9 @@ function ProfilePage() {
                                         : "failed"
                                 }`}
                             >
-            {test.passed
-                ? "✅ Сдан"
-                : "❌ Не сдан"}
+           {test.passed
+  ? `✅ ${t.testPassed}`
+  : `❌ ${t.testNoPassed}`}
         </span>
                         </div>
 
@@ -415,7 +409,7 @@ function ProfilePage() {
         {/* Настройки */}
         {activeTab === 'settings' && (
           <div className="settings-section">
-            <h2>Настройки профиля</h2>
+            <h2>{t.settings}</h2>
             
             {/* 
               TODO: GET /api/user/settings - загрузка настроек
@@ -425,8 +419,8 @@ function ProfilePage() {
             <div className="settings-form">
               <div className="setting-item">
                 <div className="setting-info">
-                  <h3>Уведомления</h3>
-                  <p>Получать уведомления о новых материалах</p>
+                  <h3>{t.alertSet}</h3>
+                  <p>{t.accesToAllert}</p>
                 </div>
                 <label className="toggle-switch">
                   <input 
@@ -443,53 +437,6 @@ function ProfilePage() {
                   <span className="toggle-slider"></span>
                 </label>
               </div>
-
-              {/* <div className="setting-item">
-                <div className="setting-info">
-                  <h3>Язык интерфейса</h3>
-                  <p>Выберите язык отображения</p>
-                </div>
-                <select 
-                  defaultValue={profileData.settings?.language}
-                  onChange={(e) => {
-                    const newSettings = {
-                      ...profileData.settings,
-                      language: e.target.value
-                    }
-                    localStorage.setItem('user_settings', JSON.stringify(newSettings))
-                  }}
-                  className="setting-select"
-                >
-                  <option value="ru">🇷🇺 Русский</option>
-                  <option value="en">🇬🇧 English</option>
-                </select>
-              </div> */}
-
-              {/* <div className="setting-item">
-                <div className="setting-info">
-                  <h3>Тема оформления</h3>
-                  <p>Светлая или темная тема</p>
-                </div>
-                <select 
-                  defaultValue={profileData.settings?.theme}
-                  onChange={(e) => {
-                    const newSettings = {
-                      ...profileData.settings,
-                      theme: e.target.value
-                    }
-                    localStorage.setItem('user_settings', JSON.stringify(newSettings))
-                  }}
-                  className="setting-select"
-                >
-                  <option value="light">☀️ Светлая</option>
-                  <option value="dark">🌙 Темная</option>
-                </select>
-              </div> */}
-
-              {/* 
-                TODO: Добавить форму изменения пароля
-                PUT /api/user/change-password
-              */}
             </div>
           </div>
         )}
