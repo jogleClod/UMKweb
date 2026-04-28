@@ -98,7 +98,8 @@ function ProfilePage() {
 
             const formattedTests = testData.map(test => ({
                 id: test.id,
-                title: test.subject?.title || "Тест",
+                subjectTitle: test.subject?.title || "Предмет",
+                title: test.testTitle || "Без названия теста",
                 score: test.score,
                 maxScore: test.total,
                 date: test.createdAt,
@@ -149,12 +150,6 @@ function ProfilePage() {
 
     const t = translations[language]
 
-  const calculateAverageScore = (results) => {
-    if (results.length === 0) return 0
-    const sum = results.reduce((acc, r) => acc + (r.score / r.maxScore * 100), 0)
-    return Math.round(sum / results.length)
-  }
-
   const handleLogout = () => {
     // Очищаем локальные данные
     localStorage.removeItem('user_progress')
@@ -192,11 +187,7 @@ function ProfilePage() {
         <button onClick={() => navigate('/')} className="back-button">
             {t.main}
         </button>
-        <button onClick={handleLogout} className="logout-button">
-            {language === "kg"
-                ? "Чыгуу"
-                : "Выйти"}
-        </button>
+
 
           <div className="language-switcher">
               <button
@@ -225,6 +216,12 @@ function ProfilePage() {
                   KG
               </button>
           </div>
+
+          <button onClick={handleLogout} className="logout-button">
+              {language === "kg"
+                  ? "Чыгуу"
+                  : "Выйти"}
+          </button>
       </div>
 
       {/* Шапка профиля */}
@@ -336,26 +333,74 @@ function ProfilePage() {
             {profileData.testResults.length > 0 ? (
               <div className="tests-list">
                 {profileData.testResults.map((test) => (
-                  <div key={test.id} className={`test-card ${test.passed ? 'passed' : 'failed'}`}>
-                    <div className="test-header">
-                      <h3>{test.title}</h3>
-                      <span className={`test-status ${test.passed ? 'passed' : 'failed'}`}>
-                        {test.passed ? '✅ Сдан' : '❌ Не сдан'}
-                      </span>
+                    <div
+                        key={test.id}
+                        className={`test-card ${
+                            test.passed ? "passed" : "failed"
+                        }`}
+                    >
+                        <div className="test-header">
+                            <div className="test-title-block">
+                                <h3>{test.subjectTitle}</h3>
+                                <p className="test-subtitle">
+                                    {test.title}
+                                </p>
+
+                                <div className="modern-test-meta">
+                                    <span>📋 Тест</span>
+                                    <span>• {test.maxScore} вопросов</span>
+                                </div>
+                            </div>
+
+                            <span
+                                className={`test-status ${
+                                    test.passed
+                                        ? "passed"
+                                        : "failed"
+                                }`}
+                            >
+            {test.passed
+                ? "✅ Сдан"
+                : "❌ Не сдан"}
+        </span>
+                        </div>
+
+                        <div className="test-footer">
+                            <div className="test-info-left">
+            <span className="test-score">
+                📊 {test.score} из {test.maxScore}
+            </span>
+
+                                <span className="test-date">
+                📅 {formatDate(test.date)}
+            </span>
+                            </div>
+
+                            <div className="test-progress-wrapper">
+                                <div className="test-score-bar">
+                                    <div
+                                        className="test-score-fill"
+                                        style={{
+                                            width: `${
+                                                (test.score /
+                                                    test.maxScore) *
+                                                100
+                                            }%`
+                                        }}
+                                    />
+                                </div>
+
+                                <span className="test-percent">
+                {Math.round(
+                    (test.score /
+                        test.maxScore) *
+                    100
+                )}
+                                    %
+            </span>
+                            </div>
+                        </div>
                     </div>
-                    <div className="test-details">
-                      <div className="test-score-bar">
-                        <div 
-                          className="test-score-fill"
-                          style={{ width: `${(test.score / test.maxScore) * 100}%` }}
-                        />
-                      </div>
-                      <div className="test-meta">
-                        <span>{test.score} из {test.maxScore} баллов</span>
-                        <span>{formatDate(test.date)}</span>
-                      </div>
-                    </div>
-                  </div>
                 ))}
               </div>
             ) : (

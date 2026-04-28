@@ -11,17 +11,21 @@ body {
 
 .top-bar {
     width: 100%;
-    background-color: #13d8ffe8 ;
+    background-color: #13d8ff;
+    padding: 15px 0;
 }
+
+
 .top-bar-inner {
-    max-width: 100%;
+    width: 100%;
+    max-width: 1800px;
     margin: 0 auto;
-    padding: 40px 40px;
+    padding: 0 40px;
+
     display: flex;
     align-items: center;
     justify-content: space-between;
 }
-
 
 .hint-box {
     position: absolute;
@@ -33,18 +37,11 @@ body {
     font-size: 12px;
 }
 
-
-.prof-cont{
-    align-items: center;
-    display: flex;
-    gap: 50px;
-    margin-left: auto;
-
-}
 .profile-btn {
-    
-    font-size: 28px;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .main-header {
@@ -137,13 +134,20 @@ body {
 .left-header {
     display: flex;
     align-items: center;
+    gap: 25px;
+}
+
+.right-header {
+    display: flex;
+    align-items: center;
     gap: 20px;
 }
 
 .header-text-block h1 {
     color: white;
-    font-size: 24px;
+    font-size: 22px;
     margin: 0;
+    font-weight: 700;
 }
 
 .header-text-block h2 {
@@ -152,16 +156,11 @@ body {
 }
 
 .logo-circle {
-    width: 80px;
-    height: 80px;
+    width: 90px;
+    height: 90px;
     border-radius: 50%;
-    background: #2f4f8f;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    position: relative;
     overflow: hidden;
+    cursor: pointer;
 }
 .logo-circle img {
     width: 100%;

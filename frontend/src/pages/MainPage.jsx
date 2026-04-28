@@ -257,7 +257,7 @@ function App() {
         try {
             if (
                 userAnswers.length !==
-                tests.length
+                selectedTest.questions.length
             ) {
                 alert(
                     "Ответьте на все вопросы"
@@ -267,8 +267,8 @@ function App() {
 
             const result =
                 await TestAPI.submitTest({
-                    subjectId:
-                    selectedSubject.id,
+                    subjectId: selectedSubject.id,
+                    testTitle: selectedTest.title,
                     answers: userAnswers
                 })
 
@@ -312,59 +312,77 @@ function App() {
   <div className="page">
 
     {/* HEADER */}
-    <div className="top-bar">
-      <div className="top-bar-inner">
+      <div className="top-bar">
+          <div className="top-bar-inner">
 
-        <div className="left-header">
-          <div
-            className="logo-circle"
-            onClick={handleBadgeClick}
-          >
-            <img src={logoIcon} alt="logo" />
+              <div className="left-header">
+                  <div
+                      className="logo-circle"
+                      onClick={handleBadgeClick}
+                  >
+                      <img
+                          src={logoIcon}
+                          alt="logo"
+                      />
 
-            {showHint && (
-              <div className="hint-box">
-                Ещё {3 - clickCountRef.current} нажатия
+                      {showHint && (
+                          <div className="hint-box">
+                              Ещё {3 - clickCountRef.current} нажатия
+                          </div>
+                      )}
+                  </div>
+
+                  <div className="header-text-block">
+                      <h1>{t.title}</h1>
+                  </div>
               </div>
-            )}
+
+              <div className="right-header">
+
+                  <div className="language-switcher">
+                      <button
+                          className={
+                              language === "ru"
+                                  ? "active-lang"
+                                  : ""
+                          }
+                          onClick={() =>
+                              setLanguage("ru")
+                          }
+                      >
+                          RU
+                      </button>
+
+                      <button
+                          className={
+                              language === "kg"
+                                  ? "active-lang"
+                                  : ""
+                          }
+                          onClick={() =>
+                              setLanguage("kg")
+                          }
+                      >
+                          KG
+                      </button>
+                  </div>
+
+                  <div
+                      className="profile-btn"
+                      onClick={() =>
+                          navigate("/profile")
+                      }
+                  >
+                      <img
+                          className="icon"
+                          src={profileIcon}
+                          alt="profile-user-account"
+                      />
+                  </div>
+
+              </div>
           </div>
-
-          <div className="header-text-block">
-            <h1>{t.title}</h1>
-          </div>
-        </div>
-
-        <div className="prof-cont">
-          <div className="language-switcher">
-            <button
-              className={language === "ru" ? "active-lang" : ""}
-              onClick={() => setLanguage("ru")}
-            >
-              RU
-            </button>
-
-            <button
-              className={language === "kg" ? "active-lang" : ""}
-              onClick={() => setLanguage("kg")}
-            >
-              KG
-            </button>
-          </div>
-
-          <div
-            className="profile-btn"
-            onClick={() => navigate("/profile")}
-          >
-            <img
-              className="icon"
-              src={profileIcon}
-              alt="profile-user-account"
-            />
-          </div>
-        </div>
-
       </div>
-    </div>
 
     {/* CONTENT */}
     <div className="main-container">
