@@ -29,7 +29,11 @@ export const translations = {
         score: "Балл",
         percent: "Процент",
 
-        back: "Назад"
+        back: "Назад",
+
+        completedMaterialsLabel: "Материалов пройдено",
+        averageScoreLabel: "Средний балл",
+        studyTimeLabel: "Времени обучения",
     },
 
     kg: {
@@ -62,6 +66,10 @@ export const translations = {
         score: "Упай",
         percent: "Пайыз",
 
-        back: "Артка"
+        back: "Артка",
+
+        completedMaterialsLabel: "Өтүлгөн материалдар",
+        averageScoreLabel: "Орточо упай",
+        studyTimeLabel: "Окуу убактысы"
     }
 }

@@ -293,8 +293,16 @@ function App() {
     }, [activeSubcategory, selectedSubject])
 
 
-    const [language, setLanguage] =
-        useState("ru")
+    const [language, setLanguage] = useState(() => {
+        return localStorage.getItem("language") || "ru"
+    })
+
+    useEffect(() => {
+        localStorage.setItem(
+            "language",
+            language
+        )
+    }, [language])
 
 
     const t =
@@ -655,34 +663,68 @@ function App() {
                                 </div>
 
                                 <div className="material-actions">
+
                                     {["VIDEO", "LINK"].includes(
                                         material.type
                                     ) ? (
-                                        <a
-                                            href={material.url}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
+                                        <button
                                             className="view-btn"
+                                            onClick={async () => {
+                                                try {
+                                                    await MaterialAPI.markProgress(
+                                                        material.id
+                                                    )
+
+                                                    window.open(
+                                                        material.url,
+                                                        "_blank"
+                                                    )
+                                                } catch (error) {
+                                                    console.log(error)
+                                                }
+                                            }}
                                         >
                                             {t.watch}
-                                        </a>
+                                        </button>
                                     ) : (
                                         <>
-                                            <a
-                                                href={material.url}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
+                                            <button
                                                 className="view-btn"
+                                                onClick={async () => {
+                                                    try {
+                                                        await MaterialAPI.markProgress(
+                                                            material.id
+                                                        )
+
+                                                        window.open(
+                                                            material.url,
+                                                            "_blank"
+                                                        )
+                                                    } catch (error) {
+                                                        console.log(error)
+                                                    }
+                                                }}
                                             >
                                                 {t.open}
-                                            </a>
+                                            </button>
 
-                                            <a
-                                                href={`https://umk-qu6t.onrender.com/materials/download/${material.id}`}
+                                            <button
                                                 className="download-btn"
+                                                onClick={async () => {
+                                                    try {
+                                                        await MaterialAPI.markProgress(
+                                                            material.id
+                                                        )
+
+                                                        window.location.href =
+                                                            `https://umk-qu6t.onrender.com/materials/download/${material.id}`
+                                                    } catch (error) {
+                                                        console.log(error)
+                                                    }
+                                                }}
                                             >
                                                 {t.download}
-                                            </a>
+                                            </button>
                                         </>
                                     )}
                                 </div>

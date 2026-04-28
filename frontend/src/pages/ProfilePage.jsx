@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth'
 import './ProfilePage.css'
+import { translations } from "../constants/translations"
 
 function ProfilePage() {
   const { user, logout } = useAuth()
@@ -35,10 +36,18 @@ function ProfilePage() {
 
   const [loading, setLoading] = useState(true)
   const [activeTab, setActiveTab] = useState('progress') // progress | tests | achievements | settings
+    const [language, setLanguage] = useState(() => {
+        return localStorage.getItem("language") || "ru"
+    })
 
-  useEffect(() => {
-    loadUserData()
-  }, [])
+    useEffect(() => {
+        localStorage.setItem(
+            "language",
+            language
+        )
+    }, [language])
+
+
 
     const loadUserData = async () => {
         try {
@@ -46,21 +55,28 @@ function ProfilePage() {
 
             const token = localStorage.getItem("accessToken")
 
-            const [userRes, testRes] = await Promise.all([
+            const [userRes, testRes, statsRes] = await Promise.all([
                 fetch("https://umk-qu6t.onrender.com/auth/me", {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }
                 }),
+
                 fetch("https://umk-qu6t.onrender.com/test/my-results", {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }),
+
+                fetch("https://umk-qu6t.onrender.com/materials/profile/stats", {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }
                 })
             ])
-
             const userData = await userRes.json()
             const testData = await testRes.json()
+            const statsData = await statsRes.json()
 
             // if (userData.role === "ADMIN") {
             //     navigate("/admin")
@@ -70,16 +86,15 @@ function ProfilePage() {
             // настройки пока оставляем localStorage
             const savedSettings = localStorage.getItem("user_settings")
 
+            const globalLanguage =
+                localStorage.getItem("language") || "ru"
+
             const userSettings = savedSettings
                 ? JSON.parse(savedSettings)
                 : {
                     notifications: true,
-                    language: "ru",
                     theme: "light"
                 }
-
-            const completedMaterials = getMockCompletedMaterials()
-            const achievements = getMockAchievements()
 
             const formattedTests = testData.map(test => ({
                 id: test.id,
@@ -100,16 +115,24 @@ function ProfilePage() {
 
                 testResults: formattedTests,
 
-                completedMaterials,
-                achievements,
-                totalTimeSpent: 1240,
+                completedMaterials: (
+                    statsData?.recentMaterials || []
+                ).map(item => ({
+                    id: item.id,
+                    title: item.material?.title,
+                    category: item.material?.subcategory,
+                    completedAt: item.updatedAt,
+                    timeSpent: item.timeSpent,
+                    score: item.progress
+                })),
+
+                totalTimeSpent: statsData?.totalTime || 0,
 
                 settings: userSettings,
-
                 stats: {
-                    totalMaterials: 48,
-                    completedCount: completedMaterials.length,
-                    averageScore: calculateAverageScore(formattedTests),
+                    totalMaterials: statsData?.totalMaterials || 0,
+                    completedCount: statsData?.completedMaterials || 0,
+                    averageScore: statsData?.avgScore || 0,
                 }
             }))
 
@@ -119,68 +142,12 @@ function ProfilePage() {
             setLoading(false)
         }
     }
-  const getMockCompletedMaterials = () => {
-    return [
-      { 
-        id: 1, 
-        title: "Введение в технологию сушки", 
-        category: "Лекции", 
-        completedAt: "2026-01-15",
-        timeSpent: 45,
-        score: 90
-      },
-      { 
-        id: 2, 
-        title: "Основы влажности материалов", 
-        category: "Лекции", 
-        completedAt: "2026-01-18",
-        timeSpent: 60,
-        score: 85
-      },
-      { 
-        id: 3, 
-        title: "Практическая работа №1", 
-        category: "Практика", 
-        completedAt: "2026-01-20",
-        timeSpent: 90,
-        score: 95
-      },
-      { 
-        id: 4, 
-        title: "Методы сушки древесины", 
-        category: "Лекции", 
-        completedAt: "2026-01-25",
-        timeSpent: 55,
-        score: 88
-      },
-      { 
-        id: 5, 
-        title: "Лабораторная работа: измерение влажности", 
-        category: "Лабораторные", 
-        completedAt: "2026-02-01",
-        timeSpent: 120,
-        score: 92
-      }
-    ]
-  }
 
-  const getMockTestResults = () => {
-    return [
-      { id: 1, title: "Контрольный тест по основам сушки", score: 85, maxScore: 100, date: "2026-01-20", passed: true },
-      { id: 2, title: "Тест по методам сушки", score: 90, maxScore: 100, date: "2026-01-30", passed: true },
-      { id: 3, title: "Итоговый тест по модулю 1", score: 88, maxScore: 100, date: "2026-02-05", passed: true },
-      { id: 4, title: "Проверочный тест: Влажность", score: 65, maxScore: 100, date: "2026-02-10", passed: false }
-    ]
-  }
+    useEffect(() => {
+        loadUserData()
+    }, [])
 
-  const getMockAchievements = () => [
-    { id: 1, icon: "🎯", title: "Первый тест", description: "Пройдите первый тест", unlocked: true },
-    { id: 2, icon: "📚", title: "Книжный червь", description: "Изучите 10 материалов", unlocked: true },
-    { id: 3, icon: "⭐", title: "Отличник", description: "Сдайте тест на 90%", unlocked: true },
-    { id: 4, icon: "🔥", title: "Недельный марафон", description: "Занимайтесь 7 дней подряд", unlocked: false },
-    { id: 5, icon: "🏆", title: "Мастер сушки", description: "Завершите весь курс", unlocked: false },
-    { id: 6, icon: "⚡", title: "Быстрый ученик", description: "Пройдите материал за 30 минут", unlocked: true }
-  ]
+    const t = translations[language]
 
   const calculateAverageScore = (results) => {
     if (results.length === 0) return 0
@@ -223,11 +190,41 @@ function ProfilePage() {
       {/* Верхняя панель */}
       <div className="profile-top-bar">
         <button onClick={() => navigate('/')} className="back-button">
-          ← На главную
+            {t.main}
         </button>
         <button onClick={handleLogout} className="logout-button">
-          Выйти
+            {language === "kg"
+                ? "Чыгуу"
+                : "Выйти"}
         </button>
+
+          <div className="language-switcher">
+              <button
+                  className={
+                      language === "ru"
+                          ? "active-lang"
+                          : ""
+                  }
+                  onClick={() =>
+                      setLanguage("ru")
+                  }
+              >
+                  RU
+              </button>
+
+              <button
+                  className={
+                      language === "kg"
+                          ? "active-lang"
+                          : ""
+                  }
+                  onClick={() =>
+                      setLanguage("kg")
+                  }
+              >
+                  KG
+              </button>
+          </div>
       </div>
 
       {/* Шапка профиля */}
@@ -251,17 +248,17 @@ function ProfilePage() {
         <div className="stat-card">
           <span className="stat-icon">📖</span>
           <span className="stat-value">{profileData.stats.completedCount}/{profileData.stats.totalMaterials}</span>
-          <span className="stat-label">Материалов пройдено</span>
+          <span className="stat-label">{t.completedMaterialsLabel}</span>
         </div>
         <div className="stat-card">
           <span className="stat-icon">📊</span>
           <span className="stat-value">{profileData.stats.averageScore}%</span>
-          <span className="stat-label">Средний балл</span>
+          <span className="stat-label"> {t.averageScoreLabel}</span>
         </div>
         <div className="stat-card">
           <span className="stat-icon">⏱️</span>
           <span className="stat-value">{formatTime(profileData.totalTimeSpent)}</span>
-          <span className="stat-label">Времени обучения</span>
+          <span className="stat-label">{t.studyTimeLabel}</span>
         </div>
         
       </div>
@@ -272,20 +269,26 @@ function ProfilePage() {
           className={`profile-tab ${activeTab === 'progress' ? 'active' : ''}`}
           onClick={() => setActiveTab('progress')}
         >
-          📚 Прогресс
+          📚 {language === "kg"
+            ? "Прогресс"
+            : "Прогресс"}
         </button>
         <button 
           className={`profile-tab ${activeTab === 'tests' ? 'active' : ''}`}
           onClick={() => setActiveTab('tests')}
         >
-          📝 Тесты
+          📝 {language === "kg"
+            ? "Тесттер"
+            : "Тесты"}
         </button>
         
         <button 
           className={`profile-tab ${activeTab === 'settings' ? 'active' : ''}`}
           onClick={() => setActiveTab('settings')}
         >
-          ⚙️ Настройки
+          ⚙️ {language === "kg"
+            ? "Орнотуулар"
+            : "Настройки"}
         </button>
       </div>
 
