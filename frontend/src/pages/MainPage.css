@@ -199,7 +199,7 @@ body {
     cursor: pointer;
     color: #00aeef;
     margin-bottom: 15px;
-    font-size: 20px;
+    font-size: 15px;
 }
 
 .active-column {
@@ -566,5 +566,232 @@ body {
 .active-lang {
     background: #13d8ffe8 !important;
     color: white !important;
+}
+
+.welcome-section {
+    width: 90%;
+    margin: 40px auto;
+    display: flex;
+    justify-content: space-between;
+    gap: 40px;
+    background: white;
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
+
+.welcome-text {
+    flex: 1;
+}
+
+.welcome-text h2 {
+    color: #005baa;
+    font-size: 32px;
+    margin-bottom: 20px;
+}
+
+.welcome-text p {
+    font-size: 18px;
+    line-height: 1.6;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.welcome-text ul {
+    padding-left: 20px;
+}
+
+.welcome-text li {
+    margin-bottom: 12px;
+    font-size: 18px;
+    color: #444;
+}
+
+.welcome-images {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.welcome-images img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 15px;
+}
+
+.welcome-section {
+    width: 90%;
+    margin: 40px auto;
+    display: flex;
+    gap: 40px;
+    background: white;
+    padding: 40px;
+    border-radius: 25px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+}
+
+.welcome-left {
+    flex: 1;
+}
+
+.welcome-badge {
+    display: inline-block;
+    background: #e8f4ff;
+    color: #005baa;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.welcome-left h1 {
+    font-size: 60px;
+    color: #003b7a;
+    line-height: 1.1;
+    margin-bottom: 20px;
+}
+
+.welcome-left h3 {
+    font-size: 28px;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.welcome-left h3 span {
+    color: #13d8ff;
+    font-weight: bold;
+}
+
+.welcome-description {
+    font-size: 20px;
+    line-height: 1.6;
+    color: #555;
+    margin-bottom: 30px;
+}
+
+.find-section h2 {
+    color: #005baa;
+    margin-bottom: 20px;
+}
+
+.find-section ul {
+    list-style: none;
+    padding: 0;
+}
+
+.find-section li {
+    padding: 12px 0;
+    font-size: 18px;
+    border-bottom: 1px solid #eee;
+}
+
+.info-box {
+    background: #edf7ff;
+    padding: 20px;
+    border-radius: 16px;
+    margin-top: 25px;
+    color: #005baa;
+    font-weight: 500;
+}
+
+.success-box {
+    background: #e9fff0;
+    padding: 20px;
+    border-radius: 16px;
+    margin-top: 20px;
+    color: #1a9c46;
+    font-weight: bold;
+}
+
+.welcome-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.welcome-right img {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    border-radius: 20px;
+}
+
+.advantages-section {
+    width: 90%;
+    margin: 30px auto 60px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+.advantage-card {
+    background: white;
+    padding: 25px;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.06);
+}
+
+.advantage-card h3 {
+    color: #005baa;
+    margin-bottom: 15px;
+}
+
+.advantage-card p {
+    color: #666;
+}
+
+.slider-section {
+    width: 90%;
+    margin: 50px auto;
+    text-align: center;
+}
+
+.slider-section h2 {
+    font-size: 42px;
+    color: #005baa;
+    margin-bottom: 30px;
+    font-weight: 700;
+}
+
+.slider-container {
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+    border-radius: 25px;
+}
+
+.slider-track {
+    display: flex;
+    gap: 20px;
+    width: max-content;
+    animation: scrollSlider 25s linear infinite;
+}
+
+.slider-track img {
+    width: 420px;
+    height: 260px;
+    object-fit: cover;
+    border-radius: 20px;
+    flex-shrink: 0;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+    transition: transform 0.3s ease;
+}
+
+.slider-track img:hover {
+    transform: scale(1.03);
+}
+
+@keyframes scrollSlider {
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(-50%);
+    }
 }
 

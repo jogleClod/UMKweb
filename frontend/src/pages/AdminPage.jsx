@@ -593,7 +593,7 @@ function AdminPage() {
                           />
 
                           <textarea
-                              placeholder="{t.descPlaceholder}"
+                              placeholder="Описание"
                               value={description}
                               onChange={(e) =>
                                   setDescription(e.target.value)
