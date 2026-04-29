@@ -6,6 +6,7 @@ import MaterialAPI from "../api/material"
 import "./AdminPage.css"
 import TestAPI from "../api/test"
 import logoIcon from "../assets/ic_logo.png"
+import { translations } from "../constants/translations"
 
 
 // ==========================================
@@ -65,8 +66,9 @@ const UserAnalyticsAPI = {
     if (!response.ok) throw new Error('Ошибка загрузки прогресса')
     return response.json()
   }
-}
 
+}
+ 
 const sections = [
   {
     title: "УМК",
@@ -146,6 +148,15 @@ function AdminPage() {
   const [materialsProgress, setMaterialsProgress] = useState([])
   const [selectedUserHistory, setSelectedUserHistory] = useState(null)
   const [loadingAnalytics, setLoadingAnalytics] = useState(false)
+  const [language, setLanguage] = useState(() => {
+        return localStorage.getItem("language") || "ru"
+    })
+
+    useEffect(() => {
+        localStorage.setItem("language", language)
+    }, [language])
+
+    const t = translations[language]
     const [testQuestions, setTestQuestions] = useState([
         {
             question: "",
@@ -458,6 +469,7 @@ function AdminPage() {
             alert("Ошибка удаления теста")
         }
     }
+     
 
 
 
@@ -473,7 +485,7 @@ function AdminPage() {
         
                   </div>
         <div>
-          <h1> Панель администратора</h1>
+          <h1>{t.title}</h1>
           <p>{user?.name}</p>
         </div>
 
@@ -483,18 +495,18 @@ function AdminPage() {
               className={`admin-tab ${activeTab === 'content' ? 'active' : ''}`}
               onClick={() => setActiveTab('content')}
             >
-              📖 Контент
+              {t.content}
             </button>
             <button
               className={`admin-tab ${activeTab === 'users' ? 'active' : ''}`}
               onClick={() => setActiveTab('users')}
             >
-              👥 Пользователи
+              {t.users}
             </button>
           </div>
 
           <button onClick={handleLogout} className="logout-admin-btn">
-            🚪 Выйти
+            {t.exit}
           </button>
         </div>
       </header>
@@ -504,11 +516,11 @@ function AdminPage() {
   <aside className="admin-sidebar">
       <div className="subject-actions">
           <div className="fixed-subject-box">
-              <strong>Технология сушки</strong>
+              <strong>{t.subject}</strong>
           </div>
       </div>
 
-    <h3>Категории</h3>
+    <h3>{t.categories}</h3>
     
     <div className="sections-nav">
       {sections.map(section => (
@@ -544,7 +556,7 @@ function AdminPage() {
 
           <main className="admin-main">
             {!activeSection ? (
-              <div className="admin-empty">Выберите категорию</div>
+              <div className="admin-empty">{t.chooseCategory}</div>
             ) : (
               <>
                 <h2>{currentSection.title}</h2>
@@ -565,11 +577,11 @@ function AdminPage() {
 
                   {!activeSubcategory ? (
                       <div className="admin-empty">
-                          Выберите подкатегорию
+                          {t.chooseSubcategory}
                       </div>
                   ) : activeSubcategory === "Тесты" ? (
                       <div className="upload-box">
-                          <h3>Создание теста</h3>
+                          <h3>{t.createTest}</h3>
 
                           <input
                               type="text"
@@ -581,7 +593,7 @@ function AdminPage() {
                           />
 
                           <textarea
-                              placeholder="Описание теста"
+                              placeholder="{t.descPlaceholder}"
                               value={description}
                               onChange={(e) =>
                                   setDescription(e.target.value)
@@ -792,7 +804,7 @@ function AdminPage() {
                       </div>
                   ) : (
                       <div className="upload-box">
-                          <h3>Добавить материал</h3>
+                          <h3>{t.addMaterial}</h3>
 
                           <input
                               type="text"
@@ -849,7 +861,7 @@ function AdminPage() {
                   {activeSubcategory &&
                       activeSubcategory !== "Тесты" && (
                           <div className="materials-list">
-                              <h3>Загруженные материалы</h3>
+                              <h3>{t.uploadedMaterials}</h3>
 
                               {filteredMaterials.length > 0 ? (
                                   filteredMaterials.map((material) => (
@@ -927,14 +939,14 @@ function AdminPage() {
                                                       handleDeleteMaterial(material.id)
                                                   }
                                               >
-                                                  🗑 Удалить
+                                                  {t.delete}
                                               </button>
                                           </div>
                                       </div>
                                   ))
                               ) : (
                                   <p>
-                                      Материалы пока не добавлены
+                                      {t.noMaterials}
                                   </p>
                               )}
                           </div>
@@ -946,10 +958,10 @@ function AdminPage() {
       ) : (
         <div className="admin-content users-content">
           <aside className="users-sidebar">
-            <h3>👥 Пользователи</h3>
+            <h3>{t.users}</h3>
             
             {loadingAnalytics ? (
-              <div className="loading-text">Загрузка...</div>
+              <div className="loading-text">{t.loading}</div>
             ) : (
               <div className="users-list">
                 {usersAnalytics.map((userData) => (
@@ -981,7 +993,7 @@ function AdminPage() {
                       </span>
                     </div>
                     <div className="user-last-active">
-                      Был активен: {new Date(userData.lastActive).toLocaleDateString('ru-RU')}
+                      {t.wasActive}: {new Date(userData.lastActive).toLocaleDateString('ru-RU')}
                     </div>
                   </div>
                 ))}
@@ -992,17 +1004,17 @@ function AdminPage() {
           <main className="users-main">
             <div className="users-analytics-grid">
               <div className="analytics-card">
-                <h3>📊 Общая статистика</h3>
+                <h3>{t.generalStats}</h3>
                 <div className="analytics-stats">
                   <div className="analytics-stat">
                     <span className="analytics-value">{usersAnalytics.length}</span>
-                    <span className="analytics-label">Всего пользователей</span>
+                    <span className="analytics-label">{t.totalUsers}</span>
                   </div>
                   <div className="analytics-stat">
                     <span className="analytics-value">
                       {usersAnalytics.reduce((sum, u) => sum + (u.testsCompleted || 0), 0)}
                     </span>
-                    <span className="analytics-label">Пройдено тестов</span>
+                    <span className="analytics-label">{t.testsTaken}</span>
                   </div>
                   <div className="analytics-stat">
                     <span className="analytics-value">
@@ -1011,13 +1023,13 @@ function AdminPage() {
                         (usersAnalytics.length || 1)
                       )}%
                     </span>
-                    <span className="analytics-label">Средний балл</span>
+                    <span className="analytics-label">{t.averageScore}</span>
                   </div>
                 </div>
               </div>
 
               <div className="analytics-card">
-                <h3>Популярные материалы</h3>
+                <h3>{t.popularMaterials}</h3>
                 <div className="materials-stats-list">
                   {materialsProgress.slice(0, 5).map((mat, index) => (
                     <div key={index} className="material-stat-item">
@@ -1025,8 +1037,8 @@ function AdminPage() {
                       <div className="material-stat-info">
                         <span className="material-stat-title">{mat.title}</span>
                         <div className="material-stat-meta">
-                          <span>👁️ {mat.views} просмотров</span>
-                          <span>👤 {mat.uniqueUsers} пользователей</span>
+                          <span>👁️ {mat.views} {t.views}</span>
+                          <span>👤 {mat.uniqueUsers} {t.uniqueUsers}</span>
                         </div>
                       </div>
                     </div>
@@ -1038,7 +1050,7 @@ function AdminPage() {
             {/* ТУТА ИСТРИЯ ПОЛЬЗОВАТЕЛЯ  */}
             {selectedUserHistory && (
               <div className="user-history-section">
-                <h3>📝 История тестов</h3>
+                <h3>{t.testHistory}</h3>
                 {Array.isArray(selectedUserHistory) && selectedUserHistory.length > 0 ? (
                   <div className="test-history-list">
                     {selectedUserHistory.map((test, index) => (
@@ -1066,7 +1078,7 @@ function AdminPage() {
                     ))}
                   </div>
                 ) : (
-                  <p className="no-data">Выберите пользователя для просмотра истории</p>
+                  <p className="no-data">{t.chooseUserHistory}</p>
                 )}
               </div>
             )}
