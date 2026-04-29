@@ -8,6 +8,9 @@ import TestAPI from "../api/test"
 import { translations } from "../constants/translations"
 import profileIcon from "../assets/ic_prof.svg"
 import logoIcon from "../assets/ic_logo.png"
+import dryingImg from "../images/img.png"
+import fruitsImg from "../images/img_1.png"
+import fruitsImg2 from "../images/img_2.png"
 
 
 const tabs = [
@@ -390,10 +393,19 @@ function App() {
       {/* MAIN NAV */}
       <div className="horizontal-menu">
 
-        <div className="menu-column home-column">
-          <h3>{t.main}</h3>
-        </div>
-
+          <div className="menu-column home-column">
+              <h3
+                  onClick={() => {
+                      setActiveCategory(null)
+                      setActiveSubcategory(null)
+                      setOpenedMenu(null)
+                      setSelectedTest(null)
+                      setStartTest(false)
+                  }}
+              >
+                  {t.main}
+              </h3>
+          </div>
         {tabs.map(tab => (
           <div
             key={tab.key}
@@ -458,304 +470,392 @@ function App() {
     </div>
 
             {/* MATERIALS */}
-            <div className="materials-section">
+      <div className="materials-section">
 
-                {!activeSubcategory ? (
-                    <p className="empty-text">
-                        {t.chooseSection}
-                    </p>
+          {!activeSubcategory ? (
+                  <>
+                      <div className="slider-section">
+                          <h2>Технология сушки</h2>
 
-                ) : activeSubcategory === "Тесты" ? (
+                          <div className="slider-container">
+                              <div className="slider-track">
+                                  <img src={fruitsImg} alt="" />
+                                  <img src={fruitsImg2} alt="" />
+                                  <img src={dryingImg} alt="" />
 
-                    <div className="test-container">
+                                  <img src={fruitsImg} alt="" />
+                                  <img src={fruitsImg2} alt="" />
+                                  <img src={dryingImg} alt="" />
+                              </div>
+                          </div>
+                      </div>
 
-                        {!selectedTest ? (
-                            <>
-                                <h2>{t.availableTests}</h2>
+                      <div className="welcome-section">
+                          <div className="welcome-left">
+                              <div className="welcome-badge">
+                                  🎓 ЭЛЕКТРОННЫЙ УЧЕБНО-МЕТОДИЧЕСКИЙ КОМПЛЕКС
+                              </div>
 
-                                <div className="tests-list">
-                                    {groupedTests.map(
-                                        (test, index) => (
-                                            <div
-                                                key={index}
-                                                className="test-list-card"
-                                            >
-                                                <h3>
-                                                    {test.title}
-                                                </h3>
+                              <h1>
+                                  Добро пожаловать <br />
+                                  на портал
+                              </h1>
 
-                                                <p>
-                                                    {t.questions}:
-                                                    {
-                                                        test.questions
-                                                            .length
-                                                    }
-                                                </p>
+                              <h3>
+                                  электронного учебно-методического комплекса курса
+                                  <span> «Технология сушки»</span>
+                              </h3>
 
-                                                <button
-                                                    onClick={() =>
-                                                        setSelectedTest(
-                                                            test
-                                                        )
-                                                    }
-                                                >
-                                                    {t.open}
-                                                </button>
-                                            </div>
-                                        )
-                                    )}
-                                </div>
-                            </>
-                        ) : !startTest ? (
-                            <div className="test-preview-card">
-                                <h2>
-                                    {selectedTest.title}
-                                </h2>
+                              <p className="welcome-description">
+                                  Данный комплекс создан с целью обеспечить студентов
+                                  всем необходимым для эффективного освоения учебного
+                                  материала: лекциями, практическими и лабораторными
+                                  заданиями, методическими указаниями, тестами и
+                                  рекомендованной литературой.
+                              </p>
 
-                                <p>
-                                    {t.questionCount}:
-                                    {
-                                        selectedTest.questions
-                                            .length
-                                    }
-                                </p>
+                              <div className="find-section">
+                                  <h2>📘 Здесь вы найдете:</h2>
 
-                                <button
-                                    className="start-test-btn"
-                                    onClick={() =>
-                                        setStartTest(true)
-                                    }
-                                >
-                                    {t.startTest}
-                                </button>
+                                  <ul>
+                                      <li>📢 Объявления и важные новости курса</li>
+                                      <li>📄 Пояснительные записки и силлабусы</li>
+                                      <li>🎥 Лекции, презентации и видеоматериалы</li>
+                                      <li>🧪 Практические и лабораторные работы с методическими указаниями</li>
+                                      <li>📅 Задания для самостоятельной работы с дедлайнами</li>
+                                      <li>📝 Темы курсовых проектов и контрольные задания</li>
+                                      <li>📚 Рекомендуемую литературу и глоссарий терминов</li>
+                                  </ul>
+                              </div>
 
-                                <button
-                                    className="back-btn"
-                                    onClick={() =>
-                                        setSelectedTest(
-                                            null
-                                        )
-                                    }
-                                >
-                                    {t.back}
-                                </button>
-                            </div>
-                        ) : (
-                            <>
-                                <h2>{t.passingTest}</h2>
+                              <div className="info-box">
+                                  ℹ️ Материалы курса структурированы для удобного и
+                                  последовательного изучения. Рекомендуется проходить
+                                  их в указанной последовательности, выполнять задания
+                                  в срок и использовать все доступные ресурсы для
+                                  закрепления знаний.
+                              </div>
 
-                                {selectedTest.questions.map(
-                                    (question) => (
-                                        <div
-                                            key={question.id}
-                                            className="test-question"
-                                        >
-                                            <h3>
-                                                {question.text}
-                                            </h3>
+                              <div className="success-box">
+                                  ✅ Желаем успешного обучения и продуктивной работы
+                                  с электронным учебно-методическим комплексом!
+                              </div>
+                          </div>
 
-                                            <div className="answers-list">
-                                                {question.answers.map(
-                                                    (
-                                                        answer
-                                                    ) => (
-                                                        <label
-                                                            key={
-                                                                answer.id
-                                                            }
-                                                            className="answer-option"
-                                                        >
-                                                            <input
-                                                                type="radio"
-                                                                name={`question-${question.id}`}
-                                                                onChange={() => {
-                                                                    const updated =
-                                                                        userAnswers.filter(
-                                                                            item =>
-                                                                                item.questionId !==
-                                                                                question.id
-                                                                        )
+                          <div className="welcome-right">
+                              <img src={fruitsImg} alt="" />
+                              <img src={fruitsImg2} alt="" />
+                              <img src={dryingImg} alt="" />
+                          </div>
+                      </div>
+                      <div className="advantages-section">
+                          <div className="advantage-card">
+                              <h3>📚 Удобная структура</h3>
+                              <p>Все материалы разделены по темам</p>
+                          </div>
 
-                                                                    updated.push(
-                                                                        {
-                                                                            questionId:
-                                                                            question.id,
-                                                                            answerId:
-                                                                            answer.id
-                                                                        }
-                                                                    )
+                          <div className="advantage-card">
+                              <h3>⏰ Доступ 24/7</h3>
+                              <p>Учитесь в любое удобное время</p>
+                          </div>
 
-                                                                    setUserAnswers(
-                                                                        updated
-                                                                    )
-                                                                }}
-                                                            />
+                          <div className="advantage-card">
+                              <h3>🎯 Эффективное обучение</h3>
+                              <p>Практика + тесты + материалы</p>
+                          </div>
 
-                                                            {
-                                                                answer.text
-                                                            }
-                                                        </label>
-                                                    )
-                                                )}
-                                            </div>
-                                        </div>
-                                    )
-                                )}
+                          <div className="advantage-card">
+                              <h3>💻 Доступ с любых устройств</h3>
+                              <p>Телефон, планшет, компьютер</p>
+                          </div>
+                      </div>
+                  </>
+          ): activeSubcategory === "Тесты" ? (
 
-                                <button
-                                    className="submit-test-btn"
-                                    onClick={
-                                        handleSubmitTest
-                                    }
-                                >
-                                    {t.finishTest}
-                                </button>
-                            </>
-                        )}
+              <div className="test-container">
 
-                        {testResult && (
-                            <div className="result-box">
-                                <h3>
-                                    {t.result}
-                                </h3>
+                  {!selectedTest ? (
+                      <>
+                          <h2>{t.availableTests}</h2>
 
-                                <p>
-                                    {t.score}:
-                                    {
-                                        testResult.result
-                                            .score
-                                    } /
-                                    {
-                                        testResult.result
-                                            .total
-                                    }
-                                </p>
+                          <div className="tests-list">
+                              {groupedTests.map(
+                                  (test, index) => (
+                                      <div
+                                          key={index}
+                                          className="test-list-card"
+                                      >
+                                          <h3>
+                                              {test.title}
+                                          </h3>
 
-                                <p>
-                                    {t.percent}:
-                                    {
-                                        testResult.result
-                                            .percent
-                                    }%
-                                </p>
-                            </div>
-                        )}
-                    </div>
+                                          <p>
+                                              {t.questions}:
+                                              {
+                                                  test.questions
+                                                      .length
+                                              }
+                                          </p>
 
-                ) : filteredMaterials.length > 0 ? (
+                                          <button
+                                              onClick={() =>
+                                                  setSelectedTest(
+                                                      test
+                                                  )
+                                              }
+                                          >
+                                              {t.open}
+                                          </button>
+                                      </div>
+                                  )
+                              )}
+                          </div>
+                      </>
+                  ) : !startTest ? (
+                      <div className="test-preview-card">
+                          <h2>
+                              {selectedTest.title}
+                          </h2>
 
-                    <div className="materials-grid">
-                        {filteredMaterials.map((material) => (
-                            <div
-                                key={material.id}
-                                className="material-card"
-                            >
-                                <div className="material-info">
-                                    <h3 className="material-title">
-                                        {material.title}
-                                    </h3>
+                          <p>
+                              {t.questionCount}:
+                              {
+                                  selectedTest.questions
+                                      .length
+                              }
+                          </p>
 
-                                    <p className="material-description">
-                                        {material.description ||
-                                            t.noDescription}
-                                    </p>
+                          <button
+                              className="start-test-btn"
+                              onClick={() =>
+                                  setStartTest(true)
+                              }
+                          >
+                              {t.startTest}
+                          </button>
 
-                                    <div className="material-meta">
+                          <button
+                              className="back-btn"
+                              onClick={() =>
+                                  setSelectedTest(
+                                      null
+                                  )
+                              }
+                          >
+                              {t.back}
+                          </button>
+                      </div>
+                  ) : (
+                      <>
+                          <h2>{t.passingTest}</h2>
+
+                          {selectedTest.questions.map(
+                              (question) => (
+                                  <div
+                                      key={question.id}
+                                      className="test-question"
+                                  >
+                                      <h3>
+                                          {question.text}
+                                      </h3>
+
+                                      <div className="answers-list">
+                                          {question.answers.map(
+                                              (
+                                                  answer
+                                              ) => (
+                                                  <label
+                                                      key={
+                                                          answer.id
+                                                      }
+                                                      className="answer-option"
+                                                  >
+                                                      <input
+                                                          type="radio"
+                                                          name={`question-${question.id}`}
+                                                          onChange={() => {
+                                                              const updated =
+                                                                  userAnswers.filter(
+                                                                      item =>
+                                                                          item.questionId !==
+                                                                          question.id
+                                                                  )
+
+                                                              updated.push(
+                                                                  {
+                                                                      questionId:
+                                                                      question.id,
+                                                                      answerId:
+                                                                      answer.id
+                                                                  }
+                                                              )
+
+                                                              setUserAnswers(
+                                                                  updated
+                                                              )
+                                                          }}
+                                                      />
+
+                                                      {
+                                                          answer.text
+                                                      }
+                                                  </label>
+                                              )
+                                          )}
+                                      </div>
+                                  </div>
+                              )
+                          )}
+
+                          <button
+                              className="submit-test-btn"
+                              onClick={
+                                  handleSubmitTest
+                              }
+                          >
+                              {t.finishTest}
+                          </button>
+                      </>
+                  )}
+
+                  {testResult && (
+                      <div className="result-box">
+                          <h3>
+                              {t.result}
+                          </h3>
+
+                          <p>
+                              {t.score}:
+                              {
+                                  testResult.result
+                                      .score
+                              } /
+                              {
+                                  testResult.result
+                                      .total
+                              }
+                          </p>
+
+                          <p>
+                              {t.percent}:
+                              {
+                                  testResult.result
+                                      .percent
+                              }%
+                          </p>
+                      </div>
+                  )}
+              </div>
+
+              ) : filteredMaterials.length > 0 ? (
+              <div className="materials-grid">
+                  {filteredMaterials.map((material) => (
+                      <div
+                          key={material.id}
+                          className="material-card"
+                      >
+                          <div className="material-info">
+                              <h3 className="material-title">
+                                  {material.title}
+                              </h3>
+
+                              <p className="material-description">
+                                  {material.description ||
+                                      t.noDescription}
+                              </p>
+
+                              <div className="material-meta">
                             <span>
                                 📁 {material.type}
                             </span>
 
-                                        <span>
+                                  <span>
                                 👤 {
-                                            material.author?.name
-                                        }
+                                      material.author?.name
+                                  }
                             </span>
 
-                                        <span>
+                                  <span>
                                 📅{" "}
-                                            {new Date(
-                                                material.createdAt
-                                            ).toLocaleDateString()}
+                                      {new Date(
+                                          material.createdAt
+                                      ).toLocaleDateString()}
                             </span>
-                                    </div>
-                                </div>
+                              </div>
+                          </div>
 
-                                <div className="material-actions">
+                          <div className="material-actions">
 
-                                    {["VIDEO", "LINK"].includes(
-                                        material.type
-                                    ) ? (
-                                        <button
-                                            className="view-btn"
-                                            onClick={async () => {
-                                                try {
-                                                    await MaterialAPI.markProgress(
-                                                        material.id
-                                                    )
+                              {["VIDEO", "LINK"].includes(
+                                  material.type
+                              ) ? (
+                                  <button
+                                      className="view-btn"
+                                      onClick={async () => {
+                                          try {
+                                              await MaterialAPI.markProgress(
+                                                  material.id
+                                              )
 
-                                                    window.open(
-                                                        material.url,
-                                                        "_blank"
-                                                    )
-                                                } catch (error) {
-                                                    console.log(error)
-                                                }
-                                            }}
-                                        >
-                                            {t.watch}
-                                        </button>
-                                    ) : (
-                                        <>
-                                            <button
-                                                className="view-btn"
-                                                onClick={async () => {
-                                                    try {
-                                                        await MaterialAPI.markProgress(
-                                                            material.id
-                                                        )
+                                              window.open(
+                                                  material.url,
+                                                  "_blank"
+                                              )
+                                          } catch (error) {
+                                              console.log(error)
+                                          }
+                                      }}
+                                  >
+                                      {t.watch}
+                                  </button>
+                              ) : (
+                                  <>
+                                      <button
+                                          className="view-btn"
+                                          onClick={async () => {
+                                              try {
+                                                  await MaterialAPI.markProgress(
+                                                      material.id
+                                                  )
 
-                                                        window.open(
-                                                            material.url,
-                                                            "_blank"
-                                                        )
-                                                    } catch (error) {
-                                                        console.log(error)
-                                                    }
-                                                }}
-                                            >
-                                                {t.open}
-                                            </button>
+                                                  window.open(
+                                                      material.url,
+                                                      "_blank"
+                                                  )
+                                              } catch (error) {
+                                                  console.log(error)
+                                              }
+                                          }}
+                                      >
+                                          {t.open}
+                                      </button>
 
-                                            <button
-                                                className="download-btn"
-                                                onClick={async () => {
-                                                    try {
-                                                        await MaterialAPI.markProgress(
-                                                            material.id
-                                                        )
+                                      <button
+                                          className="download-btn"
+                                          onClick={async () => {
+                                              try {
+                                                  await MaterialAPI.markProgress(
+                                                      material.id
+                                                  )
 
-                                                        window.location.href =
-                                                            `https://umk-qu6t.onrender.com/materials/download/${material.id}`
-                                                    } catch (error) {
-                                                        console.log(error)
-                                                    }
-                                                }}
-                                            >
-                                                {t.download}
-                                            </button>
-                                        </>
-                                    )}
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-
-                ) : (
-                    <p className="empty-text">
-                        {t.noMaterials}
-                    </p>
-                )}
-            </div>
+                                                  window.location.href =
+                                                      `https://umk-qu6t.onrender.com/materials/download/${material.id}`
+                                              } catch (error) {
+                                                  console.log(error)
+                                              }
+                                          }}
+                                      >
+                                          {t.download}
+                                      </button>
+                                  </>
+                              )}
+                          </div>
+                      </div>
+                  ))}
+              </div>
+              ) : null
+          }
+      </div>
         </div>
     )
 }
