@@ -195,11 +195,11 @@ body {
 }
 
 .menu-column h3 {
-    font-weight: 500;
+    font-weight: bold   ;
     cursor: pointer;
     color: #00aeef;
     margin-bottom: 15px;
-    font-size: 15px;
+    font-size: 20px;
 }
 
 .active-column {

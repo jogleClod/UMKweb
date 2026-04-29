@@ -94,7 +94,7 @@ export const translations = {
         titleMainPage: "ЭЛЕКТРОНДУК ОКУУ-МЕТОДИКАЛЫК КОМПЛЕКС",
         main: "Башкы бет",
         descPlaceholder:"Тестти жазыныз",
-        syllabus: "Силлабус",
+        syllabus: "УМК",
         lectures: "Лекциялык материалдар",
         labs: "Практикалык жана лабораториялык иштер",
         srs: "СИЛАБУС",
