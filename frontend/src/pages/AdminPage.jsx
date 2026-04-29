@@ -303,18 +303,52 @@ function AdminPage() {
         formData.append("file", file)
       }
 
-      await MaterialAPI.createMaterial(formData)
-      alert("Материал успешно добавлен")
+        if (editingMaterialId) {
+            await MaterialAPI.updateMaterial(
+                editingMaterialId,
+                formData
+            )
+
+            alert("Материал обновлен")
+        } else {
+            await MaterialAPI.createMaterial(
+                formData
+            )
+
+            alert("Материал успешно добавлен")
+        }
       loadMaterials()
       setTitle("")
       setDescription("")
       setFile(null)
       setVideoUrl("")
+        setEditingMaterialId(null)
     } catch (err) {
       console.log(err)
       alert("Ошибка загрузки материала")
     }
   }
+
+    const handleDeleteMaterial = async (id) => {
+        try {
+            const confirmDelete = window.confirm(
+                "Удалить материал?"
+            )
+
+            if (!confirmDelete) return
+
+            await MaterialAPI.deleteMaterial(id)
+
+            alert("Материал удален")
+            loadMaterials()
+
+        } catch (error) {
+            console.log(error)
+            alert("Ошибка удаления материала")
+        }
+    }
+
+    const [editingMaterialId, setEditingMaterialId] = useState(null)
 
     const [selectedSubject] = useState({
         id: 1,
@@ -805,14 +839,11 @@ function AdminPage() {
                                   ? file.name
                                   : "📁 Выберите файл"}
                           </label>
-
-                          <button
-                              onClick={
-                                  handleCreateMaterial
-                              }
-                          >
-                              Добавить материал
-                          </button>
+                              <button onClick={handleCreateMaterial}>
+                                  {editingMaterialId
+                                      ? "Сохранить изменения"
+                                      : "Добавить материал"}
+                              </button>
                       </div>
                   )}
                   {activeSubcategory &&
@@ -879,6 +910,10 @@ function AdminPage() {
 
                                                       setDescription(
                                                           material.description || ""
+                                                      )
+
+                                                      setEditingMaterialId(
+                                                          material.id
                                                       )
                                                   }}
                                               >
