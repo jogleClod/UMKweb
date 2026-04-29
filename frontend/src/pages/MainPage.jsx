@@ -475,7 +475,7 @@ function App() {
           {!activeSubcategory ? (
                   <>
                       <div className="slider-section">
-                          <h2>Технология сушки</h2>
+                          <h2>{t.subject}</h2>
 
                           <div className="slider-container">
                               <div className="slider-track">
@@ -493,53 +493,45 @@ function App() {
                       <div className="welcome-section">
                           <div className="welcome-left">
                               <div className="welcome-badge">
-                                  🎓 ЭЛЕКТРОННЫЙ УЧЕБНО-МЕТОДИЧЕСКИЙ КОМПЛЕКС
+                                  🎓 {t.titleMainPage}
                               </div>
 
                               <h1>
-                                  Добро пожаловать <br />
-                                  на портал
+                                  {t.welcome} <br />
+                                  {t.welcome2}
                               </h1>
 
                               <h3>
-                                  электронного учебно-методического комплекса курса
-                                  <span> «Технология сушки»</span>
+                                  {t.toWhere}
+                                  <span> {t.tit}</span>
                               </h3>
 
                               <p className="welcome-description">
-                                  Данный комплекс создан с целью обеспечить студентов
-                                  всем необходимым для эффективного освоения учебного
-                                  материала: лекциями, практическими и лабораторными
-                                  заданиями, методическими указаниями, тестами и
-                                  рекомендованной литературой.
+                                  {t.titDesc}
                               </p>
 
                               <div className="find-section">
-                                  <h2>📘 Здесь вы найдете:</h2>
+                                  <h2>📘 {t.uWillFound}:</h2>
 
                                   <ul>
-                                      <li>📢 Объявления и важные новости курса</li>
-                                      <li>📄 Пояснительные записки и силлабусы</li>
-                                      <li>🎥 Лекции, презентации и видеоматериалы</li>
-                                      <li>🧪 Практические и лабораторные работы с методическими указаниями</li>
-                                      <li>📅 Задания для самостоятельной работы с дедлайнами</li>
-                                      <li>📝 Темы курсовых проектов и контрольные задания</li>
-                                      <li>📚 Рекомендуемую литературу и глоссарий терминов</li>
-                                  </ul>
+                                        <li>📢 {t.lab1}</li>
+                                        <li>📄 {t.lab2}</li>
+                                        <li>🎥 {t.lab3}</li>
+                                        <li>🧪 {t.lab4}</li>
+                                        <li>📅 {t.lab5}</li>
+                                        <li>📝 {t.lab6}</li>
+                                        <li>📚 {t.lab7}</li>
+                                    </ul>
                               </div>
 
                               <div className="info-box">
-                                  ℹ️ Материалы курса структурированы для удобного и
-                                  последовательного изучения. Рекомендуется проходить
-                                  их в указанной последовательности, выполнять задания
-                                  в срок и использовать все доступные ресурсы для
-                                  закрепления знаний.
+                                {t.infoB}
                               </div>
 
+
                               <div className="success-box">
-                                  ✅ Желаем успешного обучения и продуктивной работы
-                                  с электронным учебно-методическим комплексом!
-                              </div>
+  ✅ {t.infoB2}
+</div>
                           </div>
 
                           <div className="welcome-right">
@@ -549,26 +541,26 @@ function App() {
                           </div>
                       </div>
                       <div className="advantages-section">
-                          <div className="advantage-card">
-                              <h3>📚 Удобная структура</h3>
-                              <p>Все материалы разделены по темам</p>
-                          </div>
+  <div className="advantage-card">
+    <h3>📚 {t.ad1}</h3>
+    <p>{t.ad2}</p>
+  </div>
 
-                          <div className="advantage-card">
-                              <h3>⏰ Доступ 24/7</h3>
-                              <p>Учитесь в любое удобное время</p>
-                          </div>
+  <div className="advantage-card">
+    <h3>⏰ {t.ad3}</h3>
+    <p>{t.ad4}</p>
+  </div>
 
-                          <div className="advantage-card">
-                              <h3>🎯 Эффективное обучение</h3>
-                              <p>Практика + тесты + материалы</p>
-                          </div>
+  <div className="advantage-card">
+    <h3>🎯 {t.ad5}</h3>
+    <p>{t.ad6}</p>
+  </div>
 
-                          <div className="advantage-card">
-                              <h3>💻 Доступ с любых устройств</h3>
-                              <p>Телефон, планшет, компьютер</p>
-                          </div>
-                      </div>
+  <div className="advantage-card">
+    <h3>💻 {t.ad7}</h3>
+    <p>{t.ad8}</p>
+  </div>
+</div>
                   </>
           ): activeSubcategory === "Тесты" ? (
 
