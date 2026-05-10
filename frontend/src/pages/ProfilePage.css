@@ -534,3 +534,342 @@
         grid-template-columns: 1fr;
     }
 }
+
+/* ================================= */
+/* TABLETS */
+/* ================================= */
+
+@media (max-width: 1024px) {
+
+    .profile-page {
+        padding: 16px;
+    }
+
+    .profile-content {
+        padding: 24px;
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(
+            2,
+            1fr
+        );
+    }
+
+    .test-score-bar {
+        width: 180px;
+    }
+}
+
+/* ================================= */
+/* MOBILE */
+/* ================================= */
+
+@media (max-width: 768px) {
+
+    .profile-page {
+        padding: 14px;
+    }
+
+    /* ========================= */
+    /* TOP BAR */
+    /* ========================= */
+
+    .profile-top-bar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .back-button,
+    .logout-button {
+        width: 100%;
+        text-align: center;
+    }
+
+    .language-switcher {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .language-switcher button {
+        flex: 1;
+    }
+
+    /* ========================= */
+    /* HEADER */
+    /* ========================= */
+
+    .profile-header {
+        margin-bottom: 28px;
+    }
+
+    .profile-avatar {
+        width: 95px;
+        height: 95px;
+
+        font-size: 2.2rem;
+    }
+
+    .profile-name {
+        font-size: 1.7rem;
+    }
+
+    .profile-email {
+        font-size: 14px;
+
+        word-break: break-word;
+    }
+
+    /* ========================= */
+    /* STATS */
+    /* ========================= */
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .stat-card {
+        min-height: auto;
+
+        padding: 24px 18px;
+    }
+
+    .stat-value {
+        font-size: 2rem;
+    }
+
+    /* ========================= */
+    /* TABS */
+    /* ========================= */
+
+    .profile-tabs {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .profile-tab {
+        width: 100%;
+    }
+
+    /* ========================= */
+    /* CONTENT */
+    /* ========================= */
+
+    .profile-content {
+        padding: 18px;
+    }
+
+    .profile-content h2 {
+        font-size: 22px;
+    }
+
+    /* ========================= */
+    /* MATERIALS */
+    /* ========================= */
+
+    .material-card {
+        flex-direction: column;
+        align-items: flex-start;
+
+        gap: 16px;
+
+        padding: 18px;
+    }
+
+    .material-info {
+        width: 100%;
+    }
+
+    .material-info h3 {
+        font-size: 18px;
+
+        word-break: break-word;
+    }
+
+    .material-meta {
+        gap: 8px;
+    }
+
+    .material-category,
+    .material-time,
+    .material-score {
+        font-size: 12px;
+    }
+
+    .material-date {
+        font-size: 13px;
+    }
+
+    /* ========================= */
+    /* TESTS */
+    /* ========================= */
+
+    .test-card {
+        padding: 18px;
+    }
+
+    .test-header {
+        flex-direction: column;
+        align-items: flex-start;
+
+        gap: 14px;
+    }
+
+    .test-title-block h3 {
+        font-size: 20px;
+    }
+
+    .test-subtitle {
+        font-size: 15px;
+    }
+
+    .modern-test-meta {
+        flex-wrap: wrap;
+    }
+
+    .test-footer {
+        flex-direction: column;
+        align-items: flex-start;
+
+        gap: 16px;
+    }
+
+    .test-progress-wrapper {
+        width: 100%;
+    }
+
+    .test-score-bar {
+        width: 100%;
+    }
+
+    .test-percent {
+        min-width: 48px;
+        text-align: right;
+    }
+
+    /* ========================= */
+    /* SETTINGS */
+    /* ========================= */
+
+    .setting-item {
+        flex-direction: column;
+        align-items: flex-start;
+
+        gap: 18px;
+
+        padding: 20px;
+    }
+
+    .setting-info h3 {
+        font-size: 20px;
+    }
+
+    .setting-info p {
+        font-size: 15px;
+    }
+}
+
+/* ================================= */
+/* SMALL PHONES */
+/* ================================= */
+
+@media (max-width: 480px) {
+
+    .profile-page {
+        padding: 10px;
+    }
+
+    .profile-content {
+        padding: 14px;
+    }
+
+    .profile-avatar {
+        width: 80px;
+        height: 80px;
+
+        font-size: 1.9rem;
+    }
+
+    .profile-name {
+        font-size: 1.45rem;
+    }
+
+    .profile-role {
+        font-size: 13px;
+    }
+
+    .stat-card {
+        padding: 20px 16px;
+    }
+
+    .stat-icon {
+        font-size: 2.2rem;
+    }
+
+    .stat-value {
+        font-size: 1.8rem;
+    }
+
+    .profile-tab {
+        padding: 12px;
+        font-size: 14px;
+    }
+
+    .test-title-block h3 {
+        font-size: 18px;
+    }
+
+    .test-subtitle {
+        font-size: 14px;
+    }
+
+    .test-status {
+        font-size: 15px;
+    }
+
+    .modern-test-meta {
+        font-size: 12px;
+    }
+
+    .test-score,
+    .test-date {
+        font-size: 13px;
+    }
+}
+
+/* ================================= */
+/* VERY SMALL */
+/* 320px */
+/* ================================= */
+
+@media (max-width: 360px) {
+
+    .profile-name {
+        font-size: 1.3rem;
+    }
+
+    .profile-email {
+        font-size: 12px;
+    }
+
+    .stat-value {
+        font-size: 1.5rem;
+    }
+
+    .profile-tab {
+        font-size: 13px;
+    }
+
+    .test-card {
+        padding: 14px;
+    }
+
+    .test-title-block h3 {
+        font-size: 16px;
+    }
+
+    .setting-item {
+        padding: 16px;
+    }
+}

@@ -152,6 +152,7 @@ function AdminPage() {
         return localStorage.getItem("language") || "ru"
     })
 
+    const [testType, setTestType] = useState("TEST")
     useEffect(() => {
         localStorage.setItem("language", language)
     }, [language])
@@ -391,6 +392,7 @@ function AdminPage() {
                     testTitle: title,
                     text: question.question,
                     subjectId: 1,
+                    testType: "TEST",
                     answers: formattedAnswers
                 })
             }
@@ -469,6 +471,11 @@ function AdminPage() {
             alert("Ошибка удаления теста")
         }
     }
+
+    const [isTypeOpen, setIsTypeOpen] =
+        useState(false)
+    const [openedAnswerIndex, setOpenedAnswerIndex] =
+        useState(null)
      
 
 
@@ -599,6 +606,53 @@ function AdminPage() {
                                   setDescription(e.target.value)
                               }
                           />
+                          <div className="custom-test-type">
+                              <button
+                                  type="button"
+                                  className="custom-test-trigger"
+                                  onClick={() =>
+                                      setIsTypeOpen(!isTypeOpen)
+                                  }
+                              >
+                                  {
+                                      testType === "TEST"
+                                          ? "Обычный тест"
+                                          : "Ситуационная задача"
+                                  }
+
+                                  <span
+                                      className={`dropdown-arrow ${
+                                          isTypeOpen ? "open" : ""
+                                      }`}
+                                  >
+            ▼
+        </span>
+                              </button>
+
+                              {isTypeOpen && (
+                                  <div className="custom-test-dropdown">
+                                      <button
+                                          type="button"
+                                          onClick={() => {
+                                              setTestType("TEST")
+                                              setIsTypeOpen(false)
+                                          }}
+                                      >
+                                          Обычный тест
+                                      </button>
+
+                                      <button
+                                          type="button"
+                                          onClick={() => {
+                                              setTestType("SITUATION")
+                                              setIsTypeOpen(false)
+                                          }}
+                                      >
+                                          Ситуационная задача
+                                      </button>
+                                  </div>
+                              )}
+                          </div>
 
                           {testQuestions.map(
                               (question, qIndex) => (
@@ -609,6 +663,7 @@ function AdminPage() {
                                       <h4>
                                           Вопрос {qIndex + 1}
                                       </h4>
+
 
                                       <textarea
                                           placeholder="Введите вопрос"
@@ -654,45 +709,60 @@ function AdminPage() {
                                           )}
                                       </div>
 
-                                      <select
-                                          className="correct-answer-select"
-                                          value={
-                                              question.correctAnswer
-                                          }
-                                          onChange={(e) =>
-                                              updateCorrectAnswer(
-                                                  qIndex,
-                                                  e.target.value
-                                              )
-                                          }
-                                      >
-                                          <option value="">
-                                              Выберите правильный
-                                              ответ
-                                          </option>
+                                      <div className="custom-answer-select">
+                                          <button
+                                              type="button"
+                                              className="custom-answer-trigger"
+                                              onClick={() =>
+                                                  setOpenedAnswerIndex(
+                                                      openedAnswerIndex === qIndex
+                                                          ? null
+                                                          : qIndex
+                                                  )
+                                              }
+                                          >
+                                              {question.correctAnswer ||
+                                                  "Выберите правильный ответ"}
 
-                                          {question.options.map(
-                                              (
-                                                  option,
-                                                  index
-                                              ) => (
-                                                  <option
-                                                      key={
-                                                          index
-                                                      }
-                                                      value={
-                                                          option
-                                                      }
-                                                  >
-                                                      {option ||
-                                                          `Вариант ${
-                                                              index +
-                                                              1
-                                                          }`}
-                                                  </option>
-                                              )
+                                              <span
+                                                  className={`dropdown-arrow ${
+                                                      openedAnswerIndex === qIndex
+                                                          ? "open"
+                                                          : ""
+                                                  }`}
+                                              >
+            ▼
+        </span>
+                                          </button>
+
+                                          {openedAnswerIndex === qIndex && (
+                                              <div className="custom-answer-dropdown">
+                                                  {question.options.map(
+                                                      (option, index) => (
+                                                          <button
+                                                              key={index}
+                                                              type="button"
+                                                              onClick={() => {
+                                                                  updateCorrectAnswer(
+                                                                      qIndex,
+                                                                      option
+                                                                  )
+
+                                                                  setOpenedAnswerIndex(
+                                                                      null
+                                                                  )
+                                                              }}
+                                                          >
+                                                              {option ||
+                                                                  `Вариант ${
+                                                                      index + 1
+                                                                  }`}
+                                                          </button>
+                                                      )
+                                                  )}
+                                              </div>
                                           )}
-                                      </select>
+                                      </div>
                                   </div>
                               )
                           )}
