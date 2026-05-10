@@ -381,17 +381,26 @@ function AdminPage() {
         try {
             for (const question of testQuestions) {
                 const formattedAnswers =
-                    question.options.map(option => ({
-                        text: option,
-                        isCorrect:
-                            option === question.correctAnswer
-                    }))
+                    question.options
+                        .filter(option =>
+                            option.trim() !== ""
+                        )
+                        .map(option => ({
+                            text: option,
+                            isCorrect:
+                                option === question.correctAnswer
+                        }))
+
+                if (formattedAnswers.length < 2) {
+                    alert("Минимум 2 варианта ответа")
+                    return
+                }
 
                 await TestAPI.createTest({
                     testTitle: title,
                     text: question.question,
                     subjectId: 1,
-                    testType: "TEST",
+                    testType,
                     answers: formattedAnswers
                 })
             }
