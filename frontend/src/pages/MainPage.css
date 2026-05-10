@@ -985,3 +985,34 @@ body {
         font-size: 16px;
     }
 }
+
+.situation-answer-input {
+    width: 100%;
+
+    min-height: 140px;
+
+    padding: 18px;
+
+    border: 2px solid #dbe4ff;
+    border-radius: 20px;
+
+    background: white;
+
+    font-size: 16px;
+    line-height: 1.6;
+
+    resize: vertical;
+
+    outline: none;
+
+    transition: 0.25s ease;
+
+    margin-top: 18px;
+}
+
+.situation-answer-input:focus {
+    border-color: #5b4bff;
+
+    box-shadow:
+            0 0 0 4px rgba(91, 75, 255, 0.12);
+}

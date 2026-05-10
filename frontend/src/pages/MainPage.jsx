@@ -227,7 +227,10 @@ function App() {
     }
 
     const groupedTests = Object.values(
-        tests.reduce((acc, question) => {
+        (Array.isArray(tests)
+                ? tests
+                : []
+        ).reduce((acc, question) => {
             const key =
                 question.testTitle ||
                 "Без названия"
@@ -245,6 +248,38 @@ function App() {
         }, {})
     )
 
+    const filteredGroupedTests =
+        groupedTests.filter(test => {
+
+            const firstQuestion =
+                test.questions[0]
+
+            if (!firstQuestion) return false
+
+            // Обычные тесты
+            if (
+                activeSubcategory === "Тесты"
+            ) {
+                return (
+                    firstQuestion.testType ===
+                    "TEST"
+                )
+            }
+
+            // Ситуационные задачи
+            if (
+                activeSubcategory ===
+                "Ситуационные задачи"
+            ) {
+                return (
+                    firstQuestion.testType ===
+                    "SITUATION"
+                )
+            }
+
+            return false
+        })
+
     const loadTestHistory = async () => {
         try {
             const data =
@@ -258,13 +293,18 @@ function App() {
 
     const handleSubmitTest = async () => {
         try {
+            const answeredQuestions =
+                new Set(
+                    userAnswers.map(
+                        item => item.questionId
+                    )
+                )
+
             if (
-                userAnswers.length !==
+                answeredQuestions.size !==
                 selectedTest.questions.length
             ) {
-                alert(
-                    "Ответьте на все вопросы"
-                )
+                alert("Ответьте на все вопросы")
                 return
             }
 
@@ -286,7 +326,11 @@ function App() {
     }
 
     useEffect(() => {
-        if (activeSubcategory === "Тесты") {
+        if (
+            activeSubcategory === "Тесты" ||
+            activeSubcategory ===
+            "Ситуационные задачи"
+        ){
             console.log("Открыли тесты")
             console.log("selectedSubject:", selectedSubject)
 
@@ -562,7 +606,11 @@ function App() {
   </div>
 </div>
                   </>
-          ): activeSubcategory === "Тесты" ? (
+          ): (
+              activeSubcategory === "Тесты" ||
+              activeSubcategory ===
+              "Ситуационные задачи"
+          ) ? (
 
               <div className="test-container">
 
@@ -571,7 +619,7 @@ function App() {
                           <h2>{t.availableTests}</h2>
 
                           <div className="tests-list">
-                              {groupedTests.map(
+                              {filteredGroupedTests.map(
                                   (test, index) => (
                                       <div
                                           key={index}
@@ -651,50 +699,77 @@ function App() {
                                           {question.text}
                                       </h3>
 
-                                      <div className="answers-list">
-                                          {question.answers.map(
-                                              (
-                                                  answer
-                                              ) => (
-                                                  <label
-                                                      key={
-                                                          answer.id
-                                                      }
-                                                      className="answer-option"
-                                                  >
-                                                      <input
-                                                          type="radio"
-                                                          name={`question-${question.id}`}
-                                                          onChange={() => {
-                                                              const updated =
-                                                                  userAnswers.filter(
-                                                                      item =>
-                                                                          item.questionId !==
-                                                                          question.id
-                                                                  )
+                                      {
+                                          question.testType === "TEST" ? (
 
-                                                              updated.push(
-                                                                  {
-                                                                      questionId:
-                                                                      question.id,
-                                                                      answerId:
-                                                                      answer.id
-                                                                  }
-                                                              )
+                                              <div className="answers-list">
+                                                  {question.answers.map(
+                                                      (answer) => (
+                                                          <label
+                                                              key={answer.id}
+                                                              className="answer-option"
+                                                          >
+                                                              <input
+                                                                  type="radio"
+                                                                  name={`question-${question.id}`}
+                                                                  onChange={() => {
 
-                                                              setUserAnswers(
-                                                                  updated
-                                                              )
-                                                          }}
-                                                      />
+                                                                      const updated =
+                                                                          userAnswers.filter(
+                                                                              item =>
+                                                                                  item.questionId !==
+                                                                                  question.id
+                                                                          )
 
-                                                      {
-                                                          answer.text
-                                                      }
-                                                  </label>
-                                              )
-                                          )}
-                                      </div>
+                                                                      updated.push({
+                                                                          questionId:
+                                                                          question.id,
+
+                                                                          answerId:
+                                                                          answer.id
+                                                                      })
+
+                                                                      setUserAnswers(
+                                                                          updated
+                                                                      )
+                                                                  }}
+                                                              />
+
+                                                              {answer.text}
+                                                          </label>
+                                                      )
+                                                  )}
+                                              </div>
+
+                                          ) : (
+
+                                              <textarea
+                                                  className="situation-answer-input"
+                                                  placeholder="Введите ваш ответ..."
+
+                                                  onChange={(e) => {
+
+                                                      const updated =
+                                                          userAnswers.filter(
+                                                              item =>
+                                                                  item.questionId !==
+                                                                  question.id
+                                                          )
+
+                                                      updated.push({
+                                                          questionId:
+                                                          question.id,
+
+                                                          textAnswer:
+                                                          e.target.value
+                                                      })
+
+                                                      setUserAnswers(updated)
+                                                  }}
+                                              />
+
+                                          )
+                                      }
                                   </div>
                               )
                           )}

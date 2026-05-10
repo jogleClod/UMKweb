@@ -178,7 +178,8 @@ function AdminPage() {
             {
                 question: "",
                 options: ["", "", "", ""],
-                correctAnswer: ""
+                correctAnswer: "",
+                keywords: ""
             }
         ])
     }
@@ -391,8 +392,19 @@ function AdminPage() {
                                 option === question.correctAnswer
                         }))
 
-                if (formattedAnswers.length < 2) {
+                if (
+                    testType === "TEST" &&
+                    formattedAnswers.length < 2
+                ) {
                     alert("Минимум 2 варианта ответа")
+                    return
+                }
+
+                if (
+                    testType === "SITUATION" &&
+                    !question.keywords.trim()
+                ) {
+                    alert("Добавьте ключевые слова")
                     return
                 }
 
@@ -401,7 +413,20 @@ function AdminPage() {
                     text: question.question,
                     subjectId: 1,
                     testType,
-                    answers: formattedAnswers
+
+                    keywords:
+                        testType === "SITUATION"
+                            ? question.keywords
+                                .split(",")
+                                .map(word =>
+                                    word.trim()
+                                )
+                            : [],
+
+                    answers:
+                        testType === "TEST"
+                            ? formattedAnswers
+                            : []
                 })
             }
 
@@ -440,7 +465,10 @@ function AdminPage() {
     ])
 
     const groupedTests = Object.values(
-        tests.reduce((acc, question) => {
+        (Array.isArray(tests)
+                ? tests
+                : []
+        ).reduce((acc, question) => {
             const key =
                 question.testTitle ||
                 "Без названия"
@@ -484,6 +512,18 @@ function AdminPage() {
         useState(false)
     const [openedAnswerIndex, setOpenedAnswerIndex] =
         useState(null)
+
+    const updateKeywords = (
+        questionIndex,
+        value
+    ) => {
+        const updated = [...testQuestions]
+
+        updated[questionIndex].keywords =
+            value
+
+        setTestQuestions(updated)
+    }
      
 
 
@@ -557,7 +597,8 @@ function AdminPage() {
                   {
                       question: "",
                       options: ["", "", "", ""],
-                      correctAnswer: ""
+                      correctAnswer: "",
+                      keywords: ""
                   }
               ])
           }}
@@ -684,93 +725,111 @@ function AdminPage() {
                                           }
                                       />
 
-                                      <div className="options-list">
-                                          {question.options.map(
-                                              (
-                                                  option,
-                                                  optionIndex
-                                              ) => (
-                                                  <input
-                                                      key={
-                                                          optionIndex
-                                                      }
-                                                      type="text"
-                                                      placeholder={`Вариант ${
-                                                          optionIndex +
-                                                          1
-                                                      }`}
-                                                      value={
-                                                          option
-                                                      }
-                                                      onChange={(
-                                                          e
-                                                      ) =>
-                                                          updateOption(
-                                                              qIndex,
-                                                              optionIndex,
-                                                              e.target
-                                                                  .value
-                                                          )
-                                                      }
-                                                  />
-                                              )
-                                          )}
-                                      </div>
+                                      {testType === "SITUATION" && (
+                                          <textarea
+                                              className="keywords-input"
+                                              placeholder="Ключевые слова через запятую"
+                                              value={question.keywords}
 
-                                      <div className="custom-answer-select">
-                                          <button
-                                              type="button"
-                                              className="custom-answer-trigger"
-                                              onClick={() =>
-                                                  setOpenedAnswerIndex(
-                                                      openedAnswerIndex === qIndex
-                                                          ? null
-                                                          : qIndex
+                                              onChange={(e) =>
+                                                  updateKeywords(
+                                                      qIndex,
+                                                      e.target.value
                                                   )
                                               }
-                                          >
-                                              {question.correctAnswer ||
-                                                  "Выберите правильный ответ"}
+                                          />
+                                      )}
+                                      {
+                                          testType === "TEST" && (<div className="options-list">
+                                              {question.options.map(
+                                                  (
+                                                      option,
+                                                      optionIndex
+                                                  ) => (
+                                                      <input
+                                                          key={
+                                                              optionIndex
+                                                          }
+                                                          type="text"
+                                                          placeholder={`Вариант ${
+                                                              optionIndex +
+                                                              1
+                                                          }`}
+                                                          value={
+                                                              option
+                                                          }
+                                                          onChange={(
+                                                              e
+                                                          ) =>
+                                                              updateOption(
+                                                                  qIndex,
+                                                                  optionIndex,
+                                                                  e.target
+                                                                      .value
+                                                              )
+                                                          }
+                                                      />
+                                                  )
+                                              )}
+                                          </div>)
+                                      }
 
-                                              <span
-                                                  className={`dropdown-arrow ${
-                                                      openedAnswerIndex === qIndex
-                                                          ? "open"
-                                                          : ""
-                                                  }`}
+                                      {
+                                          testType === "TEST" && ( <div className="custom-answer-select">
+                                              <button
+                                                  type="button"
+                                                  className="custom-answer-trigger"
+                                                  onClick={() =>
+                                                      setOpenedAnswerIndex(
+                                                          openedAnswerIndex === qIndex
+                                                              ? null
+                                                              : qIndex
+                                                      )
+                                                  }
                                               >
+                                                  {question.correctAnswer ||
+                                                      "Выберите правильный ответ"}
+
+                                                  <span
+                                                      className={`dropdown-arrow ${
+                                                          openedAnswerIndex === qIndex
+                                                              ? "open"
+                                                              : ""
+                                                      }`}
+                                                  >
             ▼
         </span>
-                                          </button>
+                                              </button>
 
-                                          {openedAnswerIndex === qIndex && (
-                                              <div className="custom-answer-dropdown">
-                                                  {question.options.map(
-                                                      (option, index) => (
-                                                          <button
-                                                              key={index}
-                                                              type="button"
-                                                              onClick={() => {
-                                                                  updateCorrectAnswer(
-                                                                      qIndex,
-                                                                      option
-                                                                  )
+                                              {openedAnswerIndex === qIndex && (
+                                                  <div className="custom-answer-dropdown">
+                                                      {question.options.map(
+                                                          (option, index) => (
+                                                              <button
+                                                                  key={index}
+                                                                  type="button"
+                                                                  onClick={() => {
+                                                                      updateCorrectAnswer(
+                                                                          qIndex,
+                                                                          option
+                                                                      )
 
-                                                                  setOpenedAnswerIndex(
-                                                                      null
-                                                                  )
-                                                              }}
-                                                          >
-                                                              {option ||
-                                                                  `Вариант ${
-                                                                      index + 1
-                                                                  }`}
-                                                          </button>
-                                                      )
-                                                  )}
-                                              </div>
-                                          )}
-                                      </div>
+                                                                      setOpenedAnswerIndex(
+                                                                          null
+                                                                      )
+                                                                  }}
+                                                              >
+                                                                  {option ||
+                                                                      `Вариант ${
+                                                                          index + 1
+                                                                      }`}
+                                                              </button>
+                                                          )
+                                                      )}
+                                                  </div>
+                                              )}
+                                          </div>)
+                                      }
                                   </div>
                               )
                           )}
