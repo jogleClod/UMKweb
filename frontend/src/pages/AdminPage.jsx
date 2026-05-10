@@ -262,8 +262,7 @@ function AdminPage() {
   }, [activeTab])
 
   const handleLogout = () => {
-    logout()
-    navigate('/auth')
+    navigate('/')
   }
 
 
