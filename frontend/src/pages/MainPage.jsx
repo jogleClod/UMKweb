@@ -15,27 +15,62 @@ import fruitsImg2 from "../images/img_2.png"
 
 const tabs = [
     {
-        key: "syllabus",
+        key: "normative_materials",
+        titleRu:
+            "Нормативно-методические материалы",
+        titleKg:
+            "Нормативдик-методикалык материалдар",
+
         category: "SYLLABUS"
     },
+
     {
-        key: "lectures",
+        key: "theory_course",
+        titleRu:
+            "Теоретический курс",
+        titleKg:
+            "Теориялык курс",
+
         category: "LECTURE"
     },
+
     {
-        key: "labs",
+        key: "practice_course",
+        titleRu:
+            "Практический курс",
+        titleKg:
+            "Практикалык курс",
+
         category: "LAB"
     },
+
     {
         key: "srs",
+        titleRu:
+            "Самостоятельная работа студентов",
+        titleKg:
+            "Студенттердин өз алдынча иши",
+
         category: "SRS"
     },
+
     {
-        key: "tests",
+        key: "assessment_tools",
+        titleRu:
+            "Оценочные средства",
+        titleKg:
+            "Баалоо каражаттары",
+
         category: "TEST"
     },
+
     {
-        key: "literature",
+        key: "sources",
+        titleRu:
+            "Источники",
+        titleKg:
+            "Булактар",
+
         category: "LITERATURE"
     }
 ]
@@ -47,42 +82,80 @@ const subcategoryMap = {
             ru: "Модуль",
             kg: "Модуль"
         },
+
         {
             key: "explanatory_note",
             ru: "Пояснительная записка",
             kg: "Түшүндүрмө кат"
+        },
+
+        {
+            key: "work_program",
+            ru: "Рабочая программа",
+            kg: "Жумушчу программа"
+        },
+
+        {
+            key: "syllabus",
+            ru: "Силлабус",
+            kg: "Силлабус"
+        },
+
+        {
+            key: "dictionary",
+            ru: "Терминологический словарь",
+            kg: "Терминологиялык сөздүк"
+        },
+
+        {
+            key: "glossary",
+            ru: "Глоссарий",
+            kg: "Глоссарий"
+        },
+
+        {
+            key: "methods",
+            ru: "Методы обучения",
+            kg: "Окутуу методдору"
         }
     ],
 
     LECTURE: [
         {
             key: "lectures",
-            ru: "Лекции",
-            kg: "Лекциялар"
+            ru: "Курс лекций",
+            kg: "Лекция курсу"
         },
+
         {
             key: "presentations",
             ru: "Презентации",
             kg: "Презентациялар"
         },
+
         {
             key: "video_lectures",
             ru: "Видео лекции",
             kg: "Видео лекциялар"
+        },
+
+        {
+            key: "textbook",
+            ru: "Учебник",
+            kg: "Окуу китеби"
         }
     ],
 
     LAB: [
         {
-            key: "study_materials",
-            ru: "Учебные материалы",
-            kg: "Окуу материалдары"
+            key: "lab_guides",
+            ru:
+                "Методические указания к выполнению лабораторных работ",
+
+            kg:
+                "Лабораториялык иштер боюнча көрсөтмөлөр"
         },
-        {
-            key: "method_materials",
-            ru: "Методические материалы",
-            kg: "Методикалык материалдар"
-        },
+
         {
             key: "video_materials",
             ru: "Видео материалы",
@@ -479,7 +552,11 @@ function App() {
                 }
               }}
             >
-              {t[tab.key]}
+                {
+                    language === "kg"
+                        ? tab.titleKg
+                        : tab.titleRu
+                }
             </h3>
 
             <div

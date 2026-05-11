@@ -68,65 +68,311 @@ const UserAnalyticsAPI = {
   }
 
 }
- 
+
 const sections = [
-  {
-    title: "УМК",
-    category: "SYLLABUS",
-    icon: "📚",
-    subcategories: [
-      "Модуль",
-      "Пояснительная записка"
-    ]
-  },
-  {
-    title: "Лекционные материалы",
-    category: "LECTURE",
-    icon: "📖",
-    subcategories: [
-      "Лекции",
-      "Презентации",
-      "Видео лекции"
-    ]
-  },
-  {
-    title: "Практические и лабораторные работы",
-    category: "LAB",
-    icon: "🔬",
-    subcategories: [
-      "Учебные материалы",
-      "Методические материалы",
-      "Видео материалы"
-    ]
-  },
-  {
-    title: "СРС",
-    category: "SRS",
-    icon: "✍️",
-    subcategories: [
-      "Методические указания",
-      "Задания",
-      "Семинары / Форум / Обратная связь"
-    ]
-  },
-  {
-    title: "Контрольные задания",
-    category: "TEST",
-    icon: "✅",
-    subcategories: [
-      "Контрольные вопросы",
-      "Контрольные задания",
-        "Тесты"
-    ]
-  },
-  {
-    title: "Литература",
-    category: "LITERATURE",
-    icon: "📕",
-    subcategories: [
-      "Рекомендуемые источники"
-    ]
-  }
+    {
+        titleRu:
+            "Нормативно-методические материалы",
+
+        titleKg:
+            "Нормативдик-методикалык материалдар",
+
+        category: "SYLLABUS",
+
+        icon: "📚",
+
+        subcategories: [
+            {
+                key: "module",
+
+                labelRu:
+                    "Модуль",
+
+                labelKg:
+                    "Модуль"
+            },
+
+            {
+                key: "explanatory_note",
+
+                labelRu:
+                    "Пояснительная записка",
+
+                labelKg:
+                    "Түшүндүрмө кат"
+            },
+
+            {
+                key: "work_program",
+
+                labelRu:
+                    "Рабочая программа",
+
+                labelKg:
+                    "Жумушчу программа"
+            },
+
+            {
+                key: "syllabus",
+
+                labelRu:
+                    "Силлабус",
+
+                labelKg:
+                    "Силлабус"
+            },
+
+            {
+                key: "dictionary",
+
+                labelRu:
+                    "Терминологический словарь",
+
+                labelKg:
+                    "Терминологиялык сөздүк"
+            },
+
+            {
+                key: "glossary",
+
+                labelRu:
+                    "Глоссарий",
+
+                labelKg:
+                    "Глоссарий"
+            },
+
+            {
+                key: "methods",
+
+                labelRu:
+                    "Методы обучения",
+
+                labelKg:
+                    "Окутуу методдору"
+            }
+        ]
+    },
+
+    {
+        titleRu:
+            "Теоретический курс",
+
+        titleKg:
+            "Теориялык курс",
+
+        category: "LECTURE",
+
+        icon: "📖",
+
+        subcategories: [
+            {
+                key: "lectures",
+
+                labelRu:
+                    "Курс лекций",
+
+                labelKg:
+                    "Лекция курсу"
+            },
+
+            {
+                key: "presentations",
+
+                labelRu:
+                    "Презентации",
+
+                labelKg:
+                    "Презентациялар"
+            },
+
+            {
+                key: "video_lectures",
+
+                labelRu:
+                    "Видео лекции",
+
+                labelKg:
+                    "Видео лекциялар"
+            },
+
+            {
+                key: "textbook",
+
+                labelRu:
+                    "Учебник",
+
+                labelKg:
+                    "Окуу китеби"
+            }
+        ]
+    },
+
+    {
+        titleRu:
+            "Практический курс",
+
+        titleKg:
+            "Практикалык курс",
+
+        category: "LAB",
+
+        icon: "🔬",
+
+        subcategories: [
+            {
+                key: "lab_guides",
+
+                labelRu:
+                    "Методические указания к лабораторным работам",
+
+                labelKg:
+                    "Лабораториялык иштер боюнча көрсөтмөлөр"
+            },
+
+            {
+                key: "video_materials",
+
+                labelRu:
+                    "Видео материалы",
+
+                labelKg:
+                    "Видео материалдар"
+            }
+        ]
+    },
+
+    {
+        titleRu:
+            "Самостоятельная работа студентов",
+
+        titleKg:
+            "Студенттердин өз алдынча иши",
+
+        category: "SRS",
+
+        icon: "✍️",
+
+        subcategories: [
+            {
+                key: "srs_guides",
+
+                labelRu:
+                    "Методические указания к СРС",
+
+                labelKg:
+                    "СРС боюнча көрсөтмөлөр"
+            },
+
+            {
+                key: "research_guides",
+
+                labelRu:
+                    "Методические указания к НИРС",
+
+                labelKg:
+                    "НИРС боюнча көрсөтмөлөр"
+            },
+
+            {
+                key: "startup_guides",
+
+                labelRu:
+                    "Методические указания к Start Up",
+
+                labelKg:
+                    "Start Up боюнча көрсөтмөлөр"
+            }
+        ]
+    },
+
+    {
+        titleRu:
+            "Оценочные средства",
+
+        titleKg:
+            "Баалоо каражаттары",
+
+        category: "TEST",
+
+        icon: "✅",
+
+        subcategories: [
+            {
+                key: "control_questions",
+
+                labelRu:
+                    "Контрольные вопросы",
+
+                labelKg:
+                    "Көзөмөл суроолору"
+            },
+
+            {
+                key: "tests",
+
+                labelRu:
+                    "Тесты",
+
+                labelKg:
+                    "Тесттер"
+            },
+
+            {
+                key: "situational_tasks",
+
+                labelRu:
+                    "Ситуационные задачи",
+
+                labelKg:
+                    "Ситуациялык тапшырмалар"
+            },
+
+            {
+                key: "interactive_tasks",
+
+                labelRu:
+                    "Интерактивные задания",
+
+                labelKg:
+                    "Интерактивдүү тапшырмалар"
+            }
+        ]
+    },
+
+    {
+        titleRu:
+            "Источники",
+
+        titleKg:
+            "Булактар",
+
+        category: "LITERATURE",
+
+        icon: "📕",
+
+        subcategories: [
+            {
+                key: "literature",
+
+                labelRu:
+                    "Литература",
+
+                labelKg:
+                    "Адабият"
+            },
+
+            {
+                key: "electronic_resources",
+
+                labelRu:
+                    "Электронные ресурсы",
+
+                labelKg:
+                    "Электрондук ресурстар"
+            }
+        ]
+    }
 ]
 
 function AdminPage() {
@@ -162,7 +408,8 @@ function AdminPage() {
         {
             question: "",
             options: ["", "", "", ""],
-            correctAnswer: ""
+            correctAnswer: "",
+            keywords: ""
         }
     ])
 
@@ -217,6 +464,7 @@ function AdminPage() {
         const data =
             await MaterialAPI.getBySubject(1)
       setMaterials(data)
+        console.log(materials)
     } catch (err) {
       console.log(err)
     }
@@ -269,11 +517,165 @@ function AdminPage() {
 
   const currentSection = sections.find(s => s.category === activeSection)
 
-  const filteredMaterials = materials.filter(
-    item =>
-      item.category === activeSection &&
-      item.subcategory === activeSubcategory
-  )
+    const filteredMaterials =
+        materials.filter(item => {
+
+            // =========================
+            // CATEGORY BRIDGE
+            // =========================
+
+            const categoryMap = {
+                SYLLABUS: [
+                    "SYLLABUS"
+                ],
+
+                LECTURE: [
+                    "LECTURE",
+                    "LECTURES"
+                ],
+
+                LAB: [
+                    "LAB",
+                    "PRACTICE"
+                ],
+
+                SRS: [
+                    "SRS"
+                ],
+
+                TEST: [
+                    "TEST"
+                ],
+
+                LITERATURE: [
+                    "LITERATURE"
+                ]
+            }
+
+            const allowedCategories =
+                categoryMap[
+                    activeSection
+                    ] || []
+
+            if (
+                !allowedCategories.includes(
+                    item.category
+                )
+            ) {
+                return false
+            }
+
+            // =========================
+            // SUBCATEGORY BRIDGE
+            // =========================
+
+            if (
+                item.subcategory ===
+                activeSubcategory
+            ) {
+                return true
+            }
+
+            const legacyMap = {
+
+                // ======================
+                // SYLLABUS
+                // ======================
+
+                module:
+                    "Модуль",
+
+                explanatory_note:
+                    "Пояснительная записка",
+
+                work_program:
+                    "Рабочая программа",
+
+                syllabus:
+                    "Силлабус",
+
+                dictionary:
+                    "Терминологический словарь",
+
+                glossary:
+                    "Глоссарий",
+
+                methods:
+                    "Методы обучения",
+
+                // ======================
+                // LECTURE
+                // ======================
+
+                lectures:
+                    "Лекции",
+
+                presentations:
+                    "Презентации",
+
+                video_lectures:
+                    "Видео лекции",
+
+                textbook:
+                    "Учебник",
+
+                // ======================
+                // LAB
+                // ======================
+
+                lab_guides:
+                    "Методические материалы",
+
+                video_materials:
+                    "Видео материалы",
+
+                // ======================
+                // SRS
+                // ======================
+
+                srs_guides:
+                    "Методические указания",
+
+                research_guides:
+                    "Методические указания",
+
+                startup_guides:
+                    "Start Up",
+
+                // ======================
+                // TEST
+                // ======================
+
+                tests:
+                    "Тесты",
+
+                situational_tasks:
+                    "Ситуационные задачи",
+
+                control_questions:
+                    "Контрольные вопросы",
+
+                interactive_tasks:
+                    "Интерактивные задания",
+
+                // ======================
+                // LITERATURE
+                // ======================
+
+                literature:
+                    "Рекомендуемые источники",
+
+                electronic_resources:
+                    "Электронные ресурсы"
+            }
+
+            return (
+                item.subcategory ===
+                legacyMap[
+                    activeSubcategory
+                    ]
+            )
+        })
 
     const handleCreateMaterial = async () => {
     try {
@@ -291,7 +693,13 @@ function AdminPage() {
 
       let finalType = "PDF"
 
-      if (activeSubcategory?.includes("Видео")) {
+        if (
+            activeSubcategory ===
+            "video_materials" ||
+
+            activeSubcategory ===
+            "video_lectures"
+        ) {
         finalType = videoUrl ? "LINK" : "VIDEO"
       } else if (file) {
         const fileName = file.name.toLowerCase()
@@ -454,7 +862,14 @@ function AdminPage() {
 
     useEffect(() => {
         if (
-            activeSubcategory === "Тесты" &&
+            (
+                activeSubcategory ===
+                "tests" ||
+
+                activeSubcategory ===
+                "situational_tasks"
+            ) &&
+
             selectedSubject
         ) {
             loadTests()
@@ -485,6 +900,47 @@ function AdminPage() {
             return acc
         }, {})
     )
+
+    const filteredGroupedTests =
+        groupedTests.filter(test => {
+
+            const firstQuestion =
+                test.questions[0]
+
+            if (!firstQuestion) {
+                return false
+            }
+
+            // =====================
+            // Обычные тесты
+            // =====================
+
+            if (
+                activeSubcategory ===
+                "tests"
+            ) {
+                return (
+                    firstQuestion.testType ===
+                    "TEST"
+                )
+            }
+
+            // =====================
+            // Ситуационные задачи
+            // =====================
+
+            if (
+                activeSubcategory ===
+                "situational_tasks"
+            ) {
+                return (
+                    firstQuestion.testType ===
+                    "SITUATION"
+                )
+            }
+
+            return true
+        })
 
     const handleDeleteTest = async (questions) => {
         try {
@@ -603,7 +1059,11 @@ function AdminPage() {
               ])
           }}
         >
-          {section.icon} {section.title}
+          {section.icon} {
+            language === "kg"
+                ? section.titleKg
+                : section.titleRu
+        }
         </button>
       ))}
     </div>
@@ -619,15 +1079,25 @@ function AdminPage() {
 
                 <div className="subcategory-list">
                   {currentSection.subcategories.map(sub => (
-                    <button
-                      key={sub}
-                      className={`subcategory-btn ${
-                        activeSubcategory === sub ? "active-sub" : ""
-                      }`}
-                      onClick={() => setActiveSubcategory(sub)}
-                    >
-                      {sub}
-                    </button>
+                      <button
+                          key={sub.key}
+
+                          className={`subcategory-btn ${
+                              activeSubcategory === sub.key
+                                  ? "active-sub"
+                                  : ""
+                          }`}
+
+                          onClick={() =>
+                              setActiveSubcategory(sub.key)
+                          }
+                      >
+                          {
+                              language === "kg"
+                                  ? sub.labelKg
+                                  : sub.labelRu
+                          }
+                      </button>
                   ))}
                 </div>
 
@@ -635,7 +1105,12 @@ function AdminPage() {
                       <div className="admin-empty">
                           {t.chooseSubcategory}
                       </div>
-                  ) : activeSubcategory === "Тесты" ? (
+                  ) : (
+                      activeSubcategory === "tests" ||
+
+                      activeSubcategory ===
+                      "situational_tasks"
+                  ) ? (
                       <div className="upload-box">
                           <h3>{t.createTest}</h3>
 
@@ -853,7 +1328,7 @@ function AdminPage() {
                               </h3>
 
                               {groupedTests.length > 0 ? (
-                                  groupedTests.map((test, index) => (
+                                  filteredGroupedTests.map((test, index) => (
                                       <div
                                           key={index}
                                           className="saved-test-card"
@@ -959,9 +1434,13 @@ function AdminPage() {
                                   setDescription(e.target.value)
                               }
                           />
+                          {
+                          (
+                              activeSubcategory ===
+                              "video_materials" ||
 
-                          {activeSubcategory?.includes(
-                              "Видео"
+                              activeSubcategory ===
+                              "video_lectures"
                           ) && (
                               <input
                                   type="text"
@@ -996,7 +1475,9 @@ function AdminPage() {
                       </div>
                   )}
                   {activeSubcategory &&
-                      activeSubcategory !== "Тесты" && (
+                      activeSubcategory !== "tests" &&
+                      activeSubcategory !==
+                      "situational_tasks" && (
                           <div className="materials-list">
                               <h3>{t.uploadedMaterials}</h3>
 
