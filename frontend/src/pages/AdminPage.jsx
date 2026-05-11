@@ -781,6 +781,8 @@ function AdminPage() {
                 await TestAPI.getTestsBySubject(1)
 
             setTests(data)
+
+            console.log(data)
         } catch (error) {
             console.log(error)
         }
@@ -879,27 +881,44 @@ function AdminPage() {
         selectedSubject?.id
     ])
 
-    const groupedTests = Object.values(
-        (Array.isArray(tests)
-                ? tests
-                : []
-        ).reduce((acc, question) => {
-            const key =
-                question.testTitle ||
-                "Без названия"
+    const groupedTests =
+        Object.values(
+            tests.reduce(
+                (acc, question) => {
 
-            if (!acc[key]) {
-                acc[key] = {
-                    title: key,
-                    questions: []
-                }
-            }
+                    const key =
+                        question.testType ===
+                        "SITUATION"
 
-            acc[key].questions.push(question)
+                            ? `${question.testTitle}-situation`
 
-            return acc
-        }, {})
-    )
+                            : `${question.testTitle}-${question.variant}`
+
+                    if (!acc[key]) {
+
+                        acc[key] = {
+                            testTitle:
+                            question.testTitle,
+
+                            variant:
+                            question.variant,
+
+                            testType:
+                            question.testType,
+
+                            questions: []
+                        }
+                    }
+
+                    acc[key].questions.push(
+                        question
+                    )
+
+                    return acc
+
+                }, {}
+            )
+        )
 
     const filteredGroupedTests =
         groupedTests.filter(test => {
@@ -1075,7 +1094,13 @@ function AdminPage() {
               <div className="admin-empty">{t.chooseCategory}</div>
             ) : (
               <>
-                <h2>{currentSection.title}</h2>
+                  <h2>
+                      {
+                          language === "kg"
+                              ? currentSection.titleKg
+                              : currentSection.titleRu
+                      }
+                  </h2>
 
                 <div className="subcategory-list">
                   {currentSection.subcategories.map(sub => (
@@ -1344,7 +1369,14 @@ function AdminPage() {
                                                       )
                                                   }
                                               >
-                                                  {test.title}
+                                                  {
+                                                      test.testType ===
+                                                      "SITUATION"
+
+                                                          ? test.testTitle
+
+                                                          : `${test.testTitle} — Вариант ${test.variant}`
+                                                  }
                                               </h4>
 
                                               <p>
@@ -1364,6 +1396,52 @@ function AdminPage() {
                                                                       {qIndex + 1}.{" "}
                                                                       {question.text}
                                                                   </h5>
+
+                                                                  {
+                                                                      question.testType ===
+                                                                      "SITUATION" && (
+
+                                                                          <textarea
+                                                                              className="keywords-edit-input"
+
+                                                                              placeholder="Ключевые слова через запятую"
+
+                                                                              defaultValue={
+                                                                                  question.keywords?.join(", ")
+                                                                              }
+
+                                                                              onBlur={async (e) => {
+
+                                                                                  try {
+
+                                                                                      await TestAPI.updateQuestion(
+                                                                                          question.id,
+                                                                                          {
+                                                                                              keywords:
+                                                                                                  e.target.value
+                                                                                                      .split(",")
+                                                                                                      .map(word =>
+                                                                                                          word.trim()
+                                                                                                      )
+                                                                                          }
+                                                                                      )
+
+                                                                                      alert(
+                                                                                          "Ключевые слова сохранены"
+                                                                                      )
+
+                                                                                  } catch (err) {
+
+                                                                                      console.log(err)
+
+                                                                                      alert(
+                                                                                          "Ошибка сохранения"
+                                                                                      )
+                                                                                  }
+                                                                              }}
+                                                                          />
+                                                                      )
+                                                                  }
 
                                                                   <div className="answers-preview">
                                                                       {question.answers.map(

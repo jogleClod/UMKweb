@@ -319,20 +319,43 @@ function App() {
                 ? tests
                 : []
         ).reduce((acc, question) => {
+
             const key =
-                question.testTitle ||
-                "Без названия"
+                question.testType ===
+                "SITUATION"
+
+                    ? `${question.testTitle}-situation`
+
+                    : `${question.testTitle}-${question.variant}`
 
             if (!acc[key]) {
+
                 acc[key] = {
-                    title: key,
+
+                    title:
+                        question.testType ===
+                        "SITUATION"
+
+                            ? question.testTitle
+
+                            : `${question.testTitle} — Вариант ${question.variant}`,
+
+                    testType:
+                    question.testType,
+
+                    variant:
+                    question.variant,
+
                     questions: []
                 }
             }
 
-            acc[key].questions.push(question)
+            acc[key].questions.push(
+                question
+            )
 
             return acc
+
         }, {})
     )
 
@@ -346,7 +369,8 @@ function App() {
 
             // Обычные тесты
             if (
-                activeSubcategory === "Тесты"
+                activeSubcategory === "Тесты" ||
+                activeSubcategory === "Тесттер"
             ) {
                 return (
                     firstQuestion.testType ===
@@ -357,7 +381,10 @@ function App() {
             // Ситуационные задачи
             if (
                 activeSubcategory ===
-                "Ситуационные задачи"
+                "Ситуационные задачи" ||
+
+                activeSubcategory ===
+                "Ситуациялык тапшырмалар"
             ) {
                 return (
                     firstQuestion.testType ===
@@ -398,9 +425,24 @@ function App() {
 
             const result =
                 await TestAPI.submitTest({
-                    subjectId: selectedSubject.id,
-                    testTitle: selectedTest.title,
-                    answers: userAnswers
+
+                    subjectId:
+                    selectedSubject.id,
+
+                    testTitle:
+                    selectedTest.questions[0]
+                        ?.testTitle,
+
+                    testType:
+                    selectedTest.questions[0]
+                        ?.testType,
+
+                    variant:
+                    selectedTest.questions[0]
+                        ?.variant,
+
+                    answers:
+                    userAnswers
                 })
 
             setTestResult(result)

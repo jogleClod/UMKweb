@@ -73,6 +73,37 @@ class TestAPI {
 
         return response.json()
     }
+
+    static async updateQuestion(
+        id,
+        data
+    ) {
+        const token =
+            localStorage.getItem(
+                "accessToken"
+            )
+
+        const response =
+            await fetch(
+                `${API_URL}/test/question/${id}`,
+                {
+                    method: "PATCH",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json",
+
+                        Authorization:
+                            `Bearer ${token}`
+                    },
+
+                    body:
+                        JSON.stringify(data)
+                }
+            )
+
+        return response.json()
+    }
 }
 
 export default TestAPI
