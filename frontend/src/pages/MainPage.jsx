@@ -16,60 +16,54 @@ import fruitsImg2 from "../images/img_2.png"
 const tabs = [
     {
         key: "normative_materials",
-        titleRu:
-            "Нормативно-методические материалы",
-        titleKg:
-            "Нормативдик-методикалык материалдар",
+        titleRu: "Нормативно-методические материалы",
+        titleKg: "Нормативдик-методикалык материалдар",
+        titleDe: "Normativ-methodische Materialien",
 
         category: "SYLLABUS"
     },
 
     {
         key: "theory_course",
-        titleRu:
-            "Теоретический курс",
-        titleKg:
-            "Теориялык курс",
+        titleRu: "Теоретический курс",
+        titleKg: "Теориялык курс",
+        titleDe: "Theoretischer Kurs",
 
         category: "LECTURE"
     },
 
     {
         key: "practice_course",
-        titleRu:
-            "Практический курс",
-        titleKg:
-            "Практикалык курс",
+        titleRu: "Практический курс",
+        titleKg: "Практикалык курс",
+        titleDe: "Praktischer Kurs",
 
         category: "LAB"
     },
 
     {
         key: "srs",
-        titleRu:
-            "Самостоятельная работа студентов",
-        titleKg:
-            "Студенттердин өз алдынча иши",
+        titleRu: "Самостоятельная работа студентов",
+        titleKg: "Студенттердин өз алдынча иши",
+        titleDe: "Selbstständige Arbeit der Studierenden",
 
         category: "SRS"
     },
 
     {
         key: "assessment_tools",
-        titleRu:
-            "Оценочные средства",
-        titleKg:
-            "Баалоо каражаттары",
+        titleRu: "Оценочные средства",
+        titleKg: "Баалоо каражаттары",
+        titleDe: "Bewertungsmittel",
 
         category: "TEST"
     },
 
     {
         key: "sources",
-        titleRu:
-            "Источники",
-        titleKg:
-            "Булактар",
+        titleRu: "Источники",
+        titleKg: "Булактар",
+        titleDe: "Quellen",
 
         category: "LITERATURE"
     }
@@ -80,43 +74,50 @@ const subcategoryMap = {
         {
             key: "module",
             ru: "Модуль",
-            kg: "Модуль"
+            kg: "Модуль",
+            de: "Modul"
         },
 
         {
             key: "explanatory_note",
             ru: "Пояснительная записка",
-            kg: "Түшүндүрмө кат"
+            kg: "Түшүндүрмө кат",
+            de: "Erläuterungsschreiben"
         },
 
         {
             key: "work_program",
             ru: "Рабочая программа",
-            kg: "Жумушчу программа"
+            kg: "Жумушчу программа",
+            de: "Arbeitsprogramm"
         },
 
         {
             key: "syllabus",
             ru: "Силлабус",
-            kg: "Силлабус"
+            kg: "Силлабус",
+            de: "Syllabus"
         },
 
         {
             key: "dictionary",
             ru: "Терминологический словарь",
-            kg: "Терминологиялык сөздүк"
+            kg: "Терминологиялык сөздүк",
+            de: "Terminologisches Wörterbuch"
         },
 
         {
             key: "glossary",
             ru: "Глоссарий",
-            kg: "Глоссарий"
+            kg: "Глоссарий",
+            de: "Glossar"
         },
 
         {
             key: "methods",
             ru: "Методы обучения",
-            kg: "Окутуу методдору"
+            kg: "Окутуу методдору",
+            de: "Lehrmethoden"
         }
     ],
 
@@ -124,42 +125,45 @@ const subcategoryMap = {
         {
             key: "lectures",
             ru: "Курс лекций",
-            kg: "Лекция курсу"
+            kg: "Лекция курсу",
+            de: "Vorlesungskurs"
         },
 
         {
             key: "presentations",
             ru: "Презентации",
-            kg: "Презентациялар"
+            kg: "Презентациялар",
+            de: "Präsentationen"
         },
 
         {
             key: "video_lectures",
             ru: "Видео лекции",
-            kg: "Видео лекциялар"
+            kg: "Видео лекциялар",
+            de: "Videovorlesungen"
         },
 
         {
             key: "textbook",
             ru: "Учебник",
-            kg: "Окуу китеби"
+            kg: "Окуу китеби",
+            de: "Lehrbuch"
         }
     ],
 
     LAB: [
         {
             key: "lab_guides",
-            ru:
-                "Методические указания к выполнению лабораторных работ",
-
-            kg:
-                "Лабораториялык иштер боюнча көрсөтмөлөр"
+            ru: "Методические указания к выполнению лабораторных работ",
+            kg: "Лабораториялык иштер боюнча көрсөтмөлөр",
+            de: "Methodische Anweisungen zur Durchführung von Laborarbeiten"
         },
 
         {
             key: "video_materials",
             ru: "Видео материалы",
-            kg: "Видео материалдар"
+            kg: "Видео материалдар",
+            de: "Videomaterialien"
         }
     ],
 
@@ -167,12 +171,15 @@ const subcategoryMap = {
         {
             key: "guidelines",
             ru: "Методические указания",
-            kg: "Методикалык көрсөтмөлөр"
+            kg: "Методикалык көрсөтмөлөр",
+            de: "Methodische Anweisungen"
         },
+
         {
             key: "tasks",
             ru: "Задания",
-            kg: "Тапшырмалар"
+            kg: "Тапшырмалар",
+            de: "Aufgaben"
         }
     ],
 
@@ -180,22 +187,29 @@ const subcategoryMap = {
         {
             key: "control_questions",
             ru: "Контрольные вопросы",
-            kg: "Көзөмөл суроолору"
+            kg: "Көзөмөл суроолору",
+            de: "Kontrollfragen"
         },
+
         {
             key: "control_tasks",
             ru: "Контрольные задания",
-            kg: "Көзөмөл тапшырмалары"
+            kg: "Көзөмөл тапшырмалары",
+            de: "Kontrollaufgaben"
         },
+
         {
             key: "tests",
             ru: "Тесты",
-            kg: "Тесттер"
+            kg: "Тесттер",
+            de: "Tests"
         },
+
         {
             key: "situational_tasks",
             ru: "Ситуационные задачи",
-            kg: "Ситуациялык тапшырмалар"
+            kg: "Ситуациялык тапшырмалар",
+            de: "Situationsaufgaben"
         }
     ],
 
@@ -203,7 +217,8 @@ const subcategoryMap = {
         {
             key: "recommended_sources",
             ru: "Рекомендуемые источники",
-            kg: "Сунушталган булактар"
+            kg: "Сунушталган булактар",
+            de: "Empfohlene Quellen"
         }
     ]
 }
@@ -485,6 +500,18 @@ function App() {
                       >
                           KG
                       </button>
+                       <button
+                          className={
+                              language === "de"
+                                  ? "active-lang"
+                                  : ""
+                          }
+                          onClick={() =>
+                              setLanguage("de")
+                          }
+                      >
+                          DE
+                      </button>
                   </div>
 
                   <div
@@ -543,47 +570,73 @@ function App() {
                 setActiveCategory(tab.category)
 
                 if (
-                  tab.category &&
-                  subcategoryMap[tab.category]?.length > 0
-                ) {
-                  setActiveSubcategory(
-                    subcategoryMap[tab.category][0].ru
-                  )
-                }
-              }}
+      tab.category &&
+      subcategoryMap[tab.category]?.length > 0
+    ) {
+      setActiveSubcategory(
+        language === "kg"
+          ? subcategoryMap[tab.category][0].kg
+          : language === "de"
+          ? subcategoryMap[tab.category][0].de
+          : subcategoryMap[tab.category][0].ru
+      )
+    }
+  }}
             >
-                {
-                    language === "kg"
-                        ? tab.titleKg
-                        : tab.titleRu
-                }
+               {
+    language === "kg"
+      ? tab.titleKg
+      : language === "de"
+      ? tab.titleDe
+      : tab.titleRu
+  }
             </h3>
 
-            <div
-              className={`submenu ${
-                openedMenu === tab.category
-                  ? "submenu-open"
-                  : ""
-              }`}
-            >
-              {openedMenu === tab.category &&
-                subcategoryMap[tab.category]?.map(sub => (
-                  <p
-                    key={sub.key}
-                    className={
-                      activeSubcategory === sub.ru
-                        ? "active-subcategory"
-                        : ""
-                    }
-                    onClick={() => {
-                      setActiveCategory(tab.category)
-                      setActiveSubcategory(sub.ru)
-                    }}
-                  >
-                    • {language === "kg" ? sub.kg : sub.ru}
-                  </p>
-                ))}
-            </div>
+           <div
+  className={`submenu ${
+    openedMenu === tab.category
+      ? "submenu-open"
+      : ""
+  }`}
+>
+  {openedMenu === tab.category &&
+    subcategoryMap[tab.category]?.map(sub => (
+      <p
+        key={sub.key}
+        className={
+          activeSubcategory ===
+          (
+            language === "kg"
+              ? sub.kg
+              : language === "de"
+              ? sub.de
+              : sub.ru
+          )
+            ? "active-subcategory"
+            : ""
+        }
+        onClick={() => {
+          setActiveCategory(tab.category)
+
+          setActiveSubcategory(
+            language === "kg"
+              ? sub.kg
+              : language === "de"
+              ? sub.de
+              : sub.ru
+          )
+        }}
+      >
+        • {
+          language === "kg"
+            ? sub.kg
+            : language === "de"
+            ? sub.de
+            : sub.ru
+        }
+      </p>
+    ))}
+</div>
           </div>
         ))}
       </div>

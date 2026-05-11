@@ -209,13 +209,32 @@ function ProfilePage() {
               >
                   KG
               </button>
+              <button
+                  className={
+                      language === "de"
+                          ? "active-lang"
+                          : ""
+                  }
+                  onClick={() =>
+                      setLanguage("de")
+                  }
+              >
+                  DE
+              </button>
           </div>
 
-          <button onClick={handleLogout} className="logout-button">
-              {language === "kg"
-                  ? "Чыгуу"
-                  : "Выйти"}
-          </button>
+          <button
+  onClick={handleLogout}
+  className="logout-button"
+>
+  {
+    language === "kg"
+      ? "Чыгуу"
+      : language === "de"
+      ? "Abmelden"
+      : "Выйти"
+  }
+</button>
       </div>
 
       {/* Шапка профиля */}
@@ -255,33 +274,51 @@ function ProfilePage() {
       </div>
 
       {/* Табы */}
-      <div className="profile-tabs">
-        <button 
-          className={`profile-tab ${activeTab === 'progress' ? 'active' : ''}`}
-          onClick={() => setActiveTab('progress')}
-        >
-          📚 {language === "kg"
-            ? "Прогресс"
-            : "Прогресс"}
-        </button>
-        <button 
-          className={`profile-tab ${activeTab === 'tests' ? 'active' : ''}`}
-          onClick={() => setActiveTab('tests')}
-        >
-          📝 {language === "kg"
-            ? "Тесттер"
-            : "Тесты"}
-        </button>
-        
-        <button 
-          className={`profile-tab ${activeTab === 'settings' ? 'active' : ''}`}
-          onClick={() => setActiveTab('settings')}
-        >
-          ⚙️ {language === "kg"
-            ? "Орнотуулар"
-            : "Настройки"}
-        </button>
-      </div>
+      
+<div className="profile-tabs">
+
+  <button 
+    className={`profile-tab ${activeTab === 'progress' ? 'active' : ''}`}
+    onClick={() => setActiveTab('progress')}
+  >
+    📚 {
+      language === "kg"
+        ? "Прогресс"
+        : language === "de"
+        ? "Fortschritt"
+        : "Прогресс"
+    }
+  </button>
+
+  <button 
+    className={`profile-tab ${activeTab === 'tests' ? 'active' : ''}`}
+    onClick={() => setActiveTab('tests')}
+  >
+    📝 {
+      language === "kg"
+        ? "Тесттер"
+        : language === "de"
+        ? "Tests"
+        : "Тесты"
+    }
+  </button>
+  
+  <button 
+    className={`profile-tab ${activeTab === 'settings' ? 'active' : ''}`}
+    onClick={() => setActiveTab('settings')}
+  >
+    ⚙️ {
+      language === "kg"
+        ? "Орнотуулар"
+        : language === "de"
+        ? "Einstellungen"
+        : "Настройки"
+    }
+  </button>
+
+</div>
+
+
 
       {/* Контент табов */}
       <div className="profile-content">
