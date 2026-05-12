@@ -69,17 +69,20 @@ const tabs = [
     }
 ]
 
+
 const subcategoryMap = {
+
     SYLLABUS: [
+
         {
-            key: "module",
+            key: "Модуль",
             ru: "Модуль",
             kg: "Модуль",
             de: "Modul"
         },
 
         {
-            key: "explanatory_note",
+            key: "Пояснительная записка",
             ru: "Пояснительная записка",
             kg: "Түшүндүрмө кат",
             de: "Erläuterungsschreiben"
@@ -122,8 +125,9 @@ const subcategoryMap = {
     ],
 
     LECTURE: [
+
         {
-            key: "lectures",
+            key: "Лекции",
             ru: "Курс лекций",
             kg: "Лекция курсу",
             de: "Vorlesungskurs"
@@ -152,15 +156,16 @@ const subcategoryMap = {
     ],
 
     LAB: [
+
         {
-            key: "lab_guides",
+            key: "Методические указания",
             ru: "Методические указания к выполнению лабораторных работ",
             kg: "Лабораториялык иштер боюнча көрсөтмөлөр",
             de: "Methodische Anweisungen zur Durchführung von Laborarbeiten"
         },
 
         {
-            key: "video_materials",
+            key: "Методические материалы",
             ru: "Видео материалы",
             kg: "Видео материалдар",
             de: "Videomaterialien"
@@ -168,8 +173,9 @@ const subcategoryMap = {
     ],
 
     SRS: [
+
         {
-            key: "guidelines",
+            key: "Методические указания",
             ru: "Методические указания",
             kg: "Методикалык көрсөтмөлөр",
             de: "Methodische Anweisungen"
@@ -184,6 +190,7 @@ const subcategoryMap = {
     ],
 
     TEST: [
+
         {
             key: "control_questions",
             ru: "Контрольные вопросы",
@@ -214,14 +221,17 @@ const subcategoryMap = {
     ],
 
     LITERATURE: [
+
         {
-            key: "recommended_sources",
+            key: "Рекомендуемые источники",
             ru: "Рекомендуемые источники",
             kg: "Сунушталган булактар",
             de: "Empfohlene Quellen"
         }
     ]
 }
+
+
 
 
 function App() {
@@ -234,6 +244,10 @@ function App() {
 
     const [activeCategory, setActiveCategory] = useState(null)
     const [activeSubcategory, setActiveSubcategory] = useState(null)
+    const [
+        activeSubcategoryKey,
+        setActiveSubcategoryKey
+    ] = useState(null)
 
     const clickCountRef = useRef(0)
     const clickTimerRef = useRef(null)
@@ -279,12 +293,20 @@ function App() {
         }, 2000)
     }
 
-    const filteredMaterials = materials.filter(
-        item =>
-            item.category === activeCategory &&
-            item.subcategory === activeSubcategory
+    console.log(materials)
+    console.log(activeSubcategoryKey)
+
+    console.log(
+        materials.map(
+            item => item.subcategory
+        )
     )
 
+    const filteredMaterials = materials.filter(
+        item =>
+            item.subcategory ===
+            activeSubcategoryKey
+    )
     const [openedMenu, setOpenedMenu] = useState(null)
 
     const [tests, setTests] = useState([])
@@ -458,8 +480,12 @@ function App() {
     useEffect(() => {
         if (
             activeSubcategory === "Тесты" ||
-            activeSubcategory ===
-            "Ситуационные задачи"
+            activeSubcategory === "Тесттер" ||
+            activeSubcategory === "Tests" ||
+
+            activeSubcategory === "Ситуационные задачи" ||
+            activeSubcategory === "Ситуациялык тапшырмалар" ||
+            activeSubcategory === "Situationsaufgaben"
         ){
             console.log("Открыли тесты")
             console.log("selectedSubject:", selectedSubject)
@@ -468,6 +494,8 @@ function App() {
             loadTestHistory()
         }
     }, [activeSubcategory, selectedSubject])
+
+
 
 
     const [language, setLanguage] = useState(() => {
@@ -615,6 +643,10 @@ function App() {
       tab.category &&
       subcategoryMap[tab.category]?.length > 0
     ) {
+                    setActiveSubcategoryKey(
+                        subcategoryMap[tab.category][0].key
+                    )
+
       setActiveSubcategory(
         language === "kg"
           ? subcategoryMap[tab.category][0].kg
@@ -660,13 +692,17 @@ function App() {
         onClick={() => {
           setActiveCategory(tab.category)
 
-          setActiveSubcategory(
-            language === "kg"
-              ? sub.kg
-              : language === "de"
-              ? sub.de
-              : sub.ru
-          )
+            setActiveSubcategoryKey(
+                sub.key
+            )
+
+            setActiveSubcategory(
+                language === "kg"
+                    ? sub.kg
+                    : language === "de"
+                        ? sub.de
+                        : sub.ru
+            )
         }}
       >
         • {
@@ -780,8 +816,12 @@ function App() {
                   </>
           ): (
               activeSubcategory === "Тесты" ||
-              activeSubcategory ===
-              "Ситуационные задачи"
+              activeSubcategory === "Тесттер" ||
+              activeSubcategory === "Tests" ||
+
+              activeSubcategory === "Ситуационные задачи" ||
+              activeSubcategory === "Ситуациялык тапшырмалар" ||
+              activeSubcategory === "Situationsaufgaben"
           ) ? (
 
               <div className="test-container">
