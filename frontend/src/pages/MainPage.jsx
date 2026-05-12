@@ -770,7 +770,6 @@ function App() {
                                         <li>📄 {t.lab2}</li>
                                         <li>🎥 {t.lab3}</li>
                                         <li>🧪 {t.lab4}</li>
-                                        <li>📅 {t.lab5}</li>
                                         <li>📝 {t.lab6}</li>
                                         <li>📚 {t.lab7}</li>
                                     </ul>
@@ -1048,18 +1047,9 @@ function App() {
                                 📁 {material.type}
                             </span>
 
-                                  <span>
-                                👤 {
-                                      material.author?.name
-                                  }
-                            </span>
 
-                                  <span>
-                                📅{" "}
-                                      {new Date(
-                                          material.createdAt
-                                      ).toLocaleDateString()}
-                            </span>
+
+
                               </div>
                           </div>
 
